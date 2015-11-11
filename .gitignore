@@ -1,9 +1,17 @@
 # misc
+.php_cs.cache
 .idea/
 .vagrant/
 .buildpath
 .project
 .settings/
 /behat.yml
+vendor
+phpunit.xml
+composer.lock
+composer.phar
+
+# remove when the bundle will be finished
+composer.json
 
 !.gitkeep
