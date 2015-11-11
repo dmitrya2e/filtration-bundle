@@ -11,7 +11,4 @@ phpunit.xml
 composer.lock
 composer.phar
 
-# remove when the bundle will be finished
-composer.json
-
 !.gitkeep
