@@ -1,0 +1,559 @@
+<?php
+
+namespace Da2e\FiltrationBundle\Tests\Filter\Filter;
+
+use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
+use Da2e\FiltrationBundle\Filter\Filter\AbstractFilter;
+use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+
+/**
+ * Class AbstractFilterTest
+ * @package Da2e\FiltrationBundle\Tests\Filter\Filter
+ */
+class AbstractFilterTest extends AbstractFilterTestCase
+{
+    public function testConstruct()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock(false, 'name');
+        $this->assertSame('name', $abstractFilterMock->getName());
+    }
+
+    public function testConstruct_DefaultValues()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock(false, 'name');
+        $this->assertSame('name', $abstractFilterMock->getName());
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException
+     */
+    public function testConstruct_InvalidName()
+    {
+        $this->getAbstractFilterMock(false, null);
+    }
+
+    public function testGetValidOptions()
+    {
+        $this->assertTrue(is_array(AbstractFilter::getValidOptions()));
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException
+     */
+    public function testAppendFormFieldsToForm()
+    {
+        $this->invokeMethod($this->getAbstractFilterMock(), 'appendFormFieldsToForm', [$this->getFormBuilderMock()]);
+    }
+
+    public function testHasAppliedValues()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertFalse($abstractFilterMock->hasAppliedValue());
+    }
+
+    public function testHasAppliedValues_True()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock(['getConvertedValue']);
+        $abstractFilterMock->expects($this->at(0))->method('getConvertedValue')->willReturn(['foo', 'bar']);
+        $abstractFilterMock->expects($this->at(1))->method('getConvertedValue')->willReturn('foobar');
+        $abstractFilterMock->expects($this->at(2))->method('getConvertedValue')->willReturn(1);
+        $abstractFilterMock->expects($this->at(3))->method('getConvertedValue')->willReturn(1.0);
+        $abstractFilterMock->expects($this->at(4))->method('getConvertedValue')->willReturn(new \stdClass());
+
+        $this->assertTrue($abstractFilterMock->hasAppliedValue());
+        $this->assertTrue($abstractFilterMock->hasAppliedValue());
+        $this->assertTrue($abstractFilterMock->hasAppliedValue());
+        $this->assertTrue($abstractFilterMock->hasAppliedValue());
+        $this->assertTrue($abstractFilterMock->hasAppliedValue());
+    }
+
+    public function testHasAppliedValues_False()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock(['getConvertedValue']);
+        $abstractFilterMock->expects($this->at(0))->method('getConvertedValue')->willReturn([]);
+        $abstractFilterMock->expects($this->at(1))->method('getConvertedValue')->willReturn('');
+        $abstractFilterMock->expects($this->at(2))->method('getConvertedValue')->willReturn(0);
+        $abstractFilterMock->expects($this->at(3))->method('getConvertedValue')->willReturn(0.0);
+
+        $this->assertFalse($abstractFilterMock->hasAppliedValue());
+        $this->assertFalse($abstractFilterMock->hasAppliedValue());
+        $this->assertFalse($abstractFilterMock->hasAppliedValue());
+        $this->assertFalse($abstractFilterMock->hasAppliedValue());
+    }
+
+    public function testGetConvertedValue()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertNull($abstractFilterMock->getConvertedValue());
+    }
+
+    public function testGetConvertedValue_Converted()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock(['convertValue']);
+        $abstractFilterMock->expects($this->once())->method('convertValue')->willReturn('foobar');
+
+        $this->assertSame('foobar', $abstractFilterMock->getConvertedValue());
+        $this->assertSame('foobar', $abstractFilterMock->getConvertedValue());
+    }
+
+    public function testGetName()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertSame('name', $abstractFilterMock->getName());
+    }
+
+    public function testSetName()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $abstractFilterMock->setName('foobar');
+        $this->assertSame('foobar', $abstractFilterMock->getName());
+    }
+
+    public function testSetName_InvalidArg()
+    {
+        $args = [
+            '',
+            1,
+            1.0,
+            null,
+            0,
+            new \stdClass(),
+            [],
+            function () {
+            },
+            true,
+            false,
+        ];
+
+        $exceptionCount = 0;
+
+        foreach ($args as $arg) {
+            $abstractFilterMock = $this->getAbstractFilterMock();
+
+            try {
+                $abstractFilterMock->setName($arg);
+            } catch (InvalidArgumentException $e) {
+                $exceptionCount++;
+            }
+        }
+
+        $this->assertEquals(count($args), $exceptionCount);
+    }
+
+    public function testGetFieldName()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertSame('', $abstractFilterMock->getFieldName());
+    }
+
+    public function testSetFieldName()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $abstractFilterMock->setFieldName('foobar');
+        $this->assertSame('foobar', $abstractFilterMock->getFieldName());
+    }
+
+    public function testSetFieldName_InvalidArg()
+    {
+        $args = [
+            '',
+            1,
+            1.0,
+            null,
+            0,
+            new \stdClass(),
+            [],
+            function () {
+            },
+            true,
+            false,
+        ];
+
+        $exceptionCount = 0;
+
+        foreach ($args as $arg) {
+            $abstractFilterMock = $this->getAbstractFilterMock();
+
+            try {
+                $abstractFilterMock->setFieldName($arg);
+            } catch (InvalidArgumentException $e) {
+                $exceptionCount++;
+            }
+        }
+
+        $this->assertEquals(count($args), $exceptionCount);
+    }
+
+    public function testGetTitle()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertSame('', $abstractFilterMock->getTitle());
+    }
+
+    public function testSetTitle()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+
+        $abstractFilterMock->setTitle('foobar');
+        $this->assertSame('foobar', $abstractFilterMock->getTitle());
+
+        $abstractFilterMock->setTitle('');
+        $this->assertSame('', $abstractFilterMock->getTitle());
+    }
+
+    public function testSetTitle_InvalidArg()
+    {
+        $args = [
+            1,
+            1.0,
+            null,
+            0,
+            new \stdClass(),
+            [],
+            function () {
+            },
+            true,
+            false,
+        ];
+
+        $exceptionCount = 0;
+
+        foreach ($args as $arg) {
+            $abstractFilterMock = $this->getAbstractFilterMock();
+
+            try {
+                $abstractFilterMock->setTitle($arg);
+            } catch (InvalidArgumentException $e) {
+                $exceptionCount++;
+            }
+        }
+
+        $this->assertEquals(count($args), $exceptionCount);
+    }
+
+    public function testGetFormOptions()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertSame([], $abstractFilterMock->getFormOptions());
+    }
+
+    public function testSetFormOptions()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+
+        $abstractFilterMock->setFormOptions(['foo', 'bar']);
+        $this->assertSame(['foo', 'bar'], $abstractFilterMock->getFormOptions());
+
+        $abstractFilterMock->setFormOptions([]);
+        $this->assertSame([], $abstractFilterMock->getFormOptions());
+    }
+
+    public function testGetTransformValuesFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertNull($abstractFilterMock->getTransformValuesFunction());
+    }
+
+    public function testSetTransformValuesFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function (FilterInterface $abstractFilterMock) {
+        };
+
+        $abstractFilterMock->setTransformValuesFunction($function);
+
+        $this->assertSame($function, $abstractFilterMock->getTransformValuesFunction());
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException
+     */
+    public function testSetTransformValuesFunction_InvalidFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function () {
+        };
+
+        $abstractFilterMock->setTransformValuesFunction($function);
+    }
+
+    public function testGetApplyFilterFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertNull($abstractFilterMock->getApplyFilterFunction());
+    }
+
+    public function testSetApplyFilterFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function (FilterInterface $abstractFilterMock, $handler) {
+        };
+
+        $abstractFilterMock->setApplyFilterFunction($function);
+
+        $this->assertSame($function, $abstractFilterMock->getApplyFilterFunction());
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException
+     */
+    public function testSetApplyFilterFunction_InvalidFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function () {
+        };
+
+        $abstractFilterMock->setApplyFilterFunction($function);
+    }
+
+    public function testGetAppendFormFieldsFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertNull($abstractFilterMock->getAppendFormFieldsFunction());
+    }
+
+    public function testSetAppendFormFieldsFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function (FilterInterface $abstractFilterMock, FormBuilderInterface $formBuilder) {
+        };
+
+        $abstractFilterMock->setAppendFormFieldsFunction($function);
+
+        $this->assertSame($function, $abstractFilterMock->getAppendFormFieldsFunction());
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException
+     */
+    public function testSetAppendFormFieldsFunction_InvalidFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function () {
+        };
+
+        $abstractFilterMock->setAppendFormFieldsFunction($function);
+    }
+
+    public function testHasForm()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertTrue(is_bool($abstractFilterMock->hasForm()));
+    }
+
+    public function testSetHasForm()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+
+        $abstractFilterMock->setHasForm(true);
+        $this->assertTrue($abstractFilterMock->hasForm());
+
+        $abstractFilterMock->setHasForm(false);
+        $this->assertFalse($abstractFilterMock->hasForm());
+    }
+
+    public function testSetHasForm_InvalidArg()
+    {
+        $args = [
+            1,
+            1.0,
+            null,
+            0,
+            new \stdClass(),
+            [],
+            function () {
+            },
+            ''
+        ];
+
+        $exceptionCount = 0;
+
+        foreach ($args as $arg) {
+            $abstractFilterMock = $this->getAbstractFilterMock();
+
+            try {
+                $abstractFilterMock->setHasForm($arg);
+            } catch (InvalidArgumentException $e) {
+                $exceptionCount++;
+            }
+        }
+
+        $this->assertEquals(count($args), $exceptionCount);
+    }
+
+    public function testGetValue()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertNull($abstractFilterMock->getValue());
+    }
+
+    public function testSetValue()
+    {
+        $args = [
+            1,
+            1.0,
+            null,
+            0,
+            new \stdClass(),
+            [],
+            function () {
+            },
+            true,
+            false,
+            'foo',
+        ];
+
+        $abstractFilterMock = $this->getAbstractFilterMock();
+
+        foreach ($args as $arg) {
+            $abstractFilterMock->setValue($arg);
+            $this->assertSame($arg, $abstractFilterMock->getValue());
+        }
+    }
+
+    public function testGetDefaultValue()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertNull($abstractFilterMock->getDefaultValue());
+    }
+
+    public function testSetDefaultValue()
+    {
+        $args = [
+            1,
+            1.0,
+            null,
+            0,
+            new \stdClass(),
+            [],
+            function () {
+            },
+            true,
+            false,
+            'foo',
+        ];
+
+        $abstractFilterMock = $this->getAbstractFilterMock();
+
+        foreach ($args as $arg) {
+            $abstractFilterMock->setDefaultValue($arg);
+            $this->assertSame($arg, $abstractFilterMock->getDefaultValue());
+        }
+    }
+
+    public function testGetValuePropertyName()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertSame('value', $abstractFilterMock->getValuePropertyName());
+    }
+
+    public function testSetValuePropertyName()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+
+        $abstractFilterMock->setValuePropertyName('value');
+        $this->assertSame('value', $abstractFilterMock->getValuePropertyName());
+    }
+
+    public function testSetValuePropertyName_InvalidArg_NotString()
+    {
+        $args = [
+            1,
+            1.0,
+            null,
+            0,
+            new \stdClass(),
+            [],
+            function () {
+            },
+            true,
+            false,
+            '',
+        ];
+
+        $exceptionCount = 0;
+
+        foreach ($args as $arg) {
+            $abstractFilterMock = $this->getAbstractFilterMock();
+
+            try {
+                $abstractFilterMock->setValuePropertyName($arg);
+            } catch (InvalidArgumentException $e) {
+                $exceptionCount++;
+            }
+        }
+
+        $this->assertEquals(count($args), $exceptionCount);
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException
+     */
+    public function testSetValuePropertyName_InvalidArg_NonExistantProperty()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $abstractFilterMock->setValuePropertyName('foobar');
+    }
+
+    public function testGetFormFieldType()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertSame('', $abstractFilterMock->getFormFieldType());
+    }
+
+    public function testSetFormFieldType()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $abstractFilterMock->setFormFieldType('foobar');
+        $this->assertSame('foobar', $abstractFilterMock->getFormFieldType());
+    }
+
+    public function testSetFormFieldType_InvalidArg()
+    {
+        $args = [
+            '',
+            1,
+            1.0,
+            null,
+            0,
+            new \stdClass(),
+            [],
+            function () {
+            },
+            true,
+            false,
+        ];
+
+        $exceptionCount = 0;
+
+        foreach ($args as $arg) {
+            $abstractFilterMock = $this->getAbstractFilterMock();
+
+            try {
+                $abstractFilterMock->setFormFieldType($arg);
+            } catch (InvalidArgumentException $e) {
+                $exceptionCount++;
+            }
+        }
+
+        $this->assertEquals(count($args), $exceptionCount);
+    }
+
+    /**
+     * Gets abstract filter mock.
+     *
+     * @param bool|array|null $methods False for no method mocking
+     * @param string          $name    The name of the filter
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|AbstractFilter
+     */
+    protected function getAbstractFilterMock($methods = false, $name = 'name')
+    {
+        return parent::getAbstractFilterMock(
+            '\Da2e\FiltrationBundle\Filter\Filter\AbstractFilter',
+            $methods,
+            [$name]
+        );
+    }
+}

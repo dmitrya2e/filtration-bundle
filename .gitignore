@@ -1,0 +1,9 @@
+# misc
+.idea/
+.vagrant/
+.buildpath
+.project
+.settings/
+/behat.yml
+
+!.gitkeep
