@@ -2,7 +2,6 @@
 
 Filtration bundle for Symfony 2.
 
-![Travis CI build status]
-(https://api.travis-ci.org/dmitrya2e/filtration-bundle.png?branch=dev)
+[![Build Status](https://travis-ci.org/dmitrya2e/filtration-bundle.svg?branch=dev)](https://travis-ci.org/dmitrya2e/filtration-bundle)
 
 Current status: **WORK IN PROGRESS**.
