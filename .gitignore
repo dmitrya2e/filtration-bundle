@@ -8,6 +8,7 @@
 /behat.yml
 vendor
 phpunit.xml
+phpunit.phar
 composer.lock
 composer.phar
 
