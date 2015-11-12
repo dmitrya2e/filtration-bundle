@@ -9,7 +9,7 @@ use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
  *
  * @package Da2e\FiltrationBundle\Filter\Collection
  */
-class BaseCollection
+class BaseCollection implements \IteratorAggregate, \Countable
 {
     /**
      * The internal filter collection keeper.
@@ -17,6 +17,22 @@ class BaseCollection
      * @var array|FilterInterface[]
      */
     protected $collection = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->collection);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count()
+    {
+        return count($this->collection);
+    }
 
     /**
      * Adds a filter to the collection.
@@ -74,16 +90,6 @@ class BaseCollection
         }
 
         return false;
-    }
-
-    /**
-     * Returns the filter count in the collection.
-     *
-     * @return int
-     */
-    protected function count()
-    {
-        return count($this->collection);
     }
 
     /**

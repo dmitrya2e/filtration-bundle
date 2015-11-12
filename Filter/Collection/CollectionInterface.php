@@ -9,7 +9,7 @@ use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
  *
  * @package Da2e\FiltrationBundle\Filter\Collection
  */
-interface CollectionInterface
+interface CollectionInterface extends \IteratorAggregate
 {
     /**
      * Adds a filter to the collection.
