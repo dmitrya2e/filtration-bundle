@@ -47,7 +47,8 @@ class FilterExecutor implements FilterExecutorInterface
             $this->registerHandlers($handlers);
         }
 
-        foreach ($collection->getFilters() as $filter) {
+        /** @var FilterInterface[] $collection */
+        foreach ($collection as $filter) {
             $handlerType = $filter->getType();
 
             if (!array_key_exists($handlerType, $this->registeredHandlers)) {

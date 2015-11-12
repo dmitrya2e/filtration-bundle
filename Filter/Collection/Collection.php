@@ -44,7 +44,7 @@ class Collection extends BaseCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      *
-     * @return static
+     * @return bool
      */
     public function removeFilterByName($name)
     {
@@ -59,16 +59,6 @@ class Collection extends BaseCollection implements CollectionInterface
     public function containsFilter($filter)
     {
         return $this->has($filter);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return array|FilterInterface[]
-     */
-    public function getFilters()
-    {
-        return $this->collection;
     }
 
     /**

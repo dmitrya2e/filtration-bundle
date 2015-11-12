@@ -48,13 +48,6 @@ interface CollectionInterface extends \IteratorAggregate
     public function containsFilter($name);
 
     /**
-     * Gets all filters.
-     *
-     * @return mixed|FilterInterface[]
-     */
-    public function getFilters();
-
-    /**
      * Checks if there are any filters.
      *
      * @return bool
