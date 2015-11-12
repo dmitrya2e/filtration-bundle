@@ -24,6 +24,22 @@ class BaseCollectionTest extends TestCase
         $this->assertSame(0, $baseCollection->count());
     }
 
+    public function testCount()
+    {
+        $baseCollection = new BaseCollection();
+
+        $filter1 = $this->getCustomAbstractMock('\Da2e\FiltrationBundle\Filter\Filter\FilterInterface', ['getName']);
+        $filter1->expects($this->atLeastOnce())->method('getName')->willReturn('foo');
+
+        $filter2 = $this->getCustomAbstractMock('\Da2e\FiltrationBundle\Filter\Filter\FilterInterface', ['getName']);
+        $filter2->expects($this->atLeastOnce())->method('getName')->willReturn('bar');
+
+        $this->invokeMethod($baseCollection, 'add', [$filter1]);
+        $this->assertSame(1, $baseCollection->count());
+        $this->invokeMethod($baseCollection, 'add', [$filter2]);
+        $this->assertSame(2, $baseCollection->count());
+    }
+
     public function testGetIterator()
     {
         $baseCollection = new BaseCollection();
