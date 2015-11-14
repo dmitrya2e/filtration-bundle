@@ -6,7 +6,7 @@ namespace Da2e\FiltrationBundle\CallableFunction\Validator;
  * Class ApplyFiltersFunctionValidator
  * @package Da2e\FiltrationBundle\CallableFunction\Validator
  */
-class ApplyFiltersFunctionValidator extends BaseFunctionValidator
+class ApplyFiltersFunctionValidator extends BaseFunctionValidator implements CallableFunctionValidatorInterface
 {
     /**
      * {@inheritdoc}

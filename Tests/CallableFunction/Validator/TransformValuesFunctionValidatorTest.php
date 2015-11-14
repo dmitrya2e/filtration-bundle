@@ -13,6 +13,22 @@ use Da2e\FiltrationBundle\Tests\TestCase;
  */
 class TransformValuesFunctionValidatorTest extends TestCase
 {
+    public function testExtendsAndInterfaces()
+    {
+        $functionValidator = new TransformValuesFunctionValidator(function () {
+        });
+
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\BaseFunctionValidator',
+            $functionValidator
+        );
+
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
+            $functionValidator
+        );
+    }
+
     public function testProperty_ArgumentTypes()
     {
         $functionValidator = new TransformValuesFunctionValidator(function () {

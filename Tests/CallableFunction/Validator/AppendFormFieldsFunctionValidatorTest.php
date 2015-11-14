@@ -15,6 +15,22 @@ use Symfony\Component\Form\FormInterface;
  */
 class AppendFormFieldsFunctionValidatorTest extends TestCase
 {
+    public function testExtendsAndInterfaces()
+    {
+        $functionValidator = new AppendFormFieldsFunctionValidator(function () {
+        });
+
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\BaseFunctionValidator',
+            $functionValidator
+        );
+
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
+            $functionValidator
+        );
+    }
+
     public function testProperty_ArgumentTypes()
     {
         $functionValidator = new AppendFormFieldsFunctionValidator(function () {

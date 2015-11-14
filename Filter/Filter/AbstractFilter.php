@@ -4,6 +4,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter;
 
 use Da2e\FiltrationBundle\CallableFunction\Validator\AppendFormFieldsFunctionValidator;
 use Da2e\FiltrationBundle\CallableFunction\Validator\ApplyFiltersFunctionValidator;
+use Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface;
 use Da2e\FiltrationBundle\CallableFunction\Validator\TransformValuesFunctionValidator;
 use Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException;
@@ -153,6 +154,21 @@ abstract class AbstractFilter implements
     protected $valuePropertyName = 'value';
 
     /**
+     * @var bool|CallableFunctionValidatorInterface|TransformValuesFunctionValidator
+     */
+    protected $callableValidatorTransformValues = false;
+
+    /**
+     * @var bool|CallableFunctionValidatorInterface|ApplyFiltersFunctionValidator
+     */
+    protected $callableValidatorAppendFormFields = false;
+
+    /**
+     * @var bool|CallableFunctionValidatorInterface|ApplyFiltersFunctionValidator
+     */
+    protected $callableValidatorApplyFilters = false;
+
+    /**
      * @param null|string $name Filter name
      */
     public function __construct($name = null)
@@ -170,61 +186,80 @@ abstract class AbstractFilter implements
     {
         return [
             // Base options
-            'name'                        => [
+            'name'                                  => [
                 'setter' => 'setName',
                 'empty'  => false,
                 'type'   => 'string',
             ],
-            'field_name'                  => [
+            'field_name'                            => [
                 'setter' => 'setFieldName',
                 'empty'  => false,
                 'type'   => 'string',
             ],
-            'default_value'               => [
+            'default_value'                         => [
                 'setter' => 'setDefaultValue',
                 'empty'  => true,
             ],
-            'value_property_name'         => [
+            'value_property_name'                   => [
                 'setter' => 'setValuePropertyName',
                 'empty'  => false,
                 'type'   => 'string',
             ],
             // Form related options
-            'title'                       => [
+            'title'                                 => [
                 'setter' => 'setTitle',
                 'empty'  => true,
                 'type'   => 'string',
             ],
-            'form_options'                => [
+            'form_options'                          => [
                 'setter' => 'setFormOptions',
                 'empty'  => true,
                 'type'   => 'array',
             ],
-            'has_form'                    => [
+            'has_form'                              => [
                 'setter' => 'setHasForm',
                 'empty'  => false,
                 'type'   => 'bool',
             ],
-            'form_field_type'             => [
+            'form_field_type'                       => [
                 'setter' => 'setFormFieldType',
                 'empty'  => false,
                 'type'   => 'string',
             ],
             // Custom callable functions
-            'apply_filter_function'       => [
+            'apply_filter_function'                 => [
                 'setter' => 'setApplyFilterFunction',
                 'empty'  => false,
                 'type'   => 'callable',
             ],
-            'append_form_fields_function' => [
+            'append_form_fields_function'           => [
                 'setter' => 'setAppendFormFieldsFunction',
                 'empty'  => false,
                 'type'   => 'callable',
             ],
-            'transform_values_function'   => [
+            'transform_values_function'             => [
                 'setter' => 'setTransformValuesFunction',
                 'empty'  => false,
                 'type'   => 'callable',
+            ],
+            // Custom callable function validators
+            'callable_validator_apply_filter'       => [
+                'setter'      => 'setCallableValidatorApplyFilter',
+                'empty'       => false,
+                'type'        => 'object',
+                'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
+            ],
+            'callable_validator_append_form_fields' => [
+                'setter'      => 'setCallableValidatorAppendFormFields',
+                'empty'       => false,
+                'type'        => 'object',
+                'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
+            ],
+            'callable_validator_transform_values'   => [
+                'setter'      => 'setCallableValidatorTransformValues',
+                'empty'       => false,
+                'type'        => 'object',
+                'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
             ],
         ];
     }
@@ -422,7 +457,8 @@ abstract class AbstractFilter implements
      */
     public function setTransformValuesFunction(callable $function)
     {
-        $validator = new TransformValuesFunctionValidator($function);
+        $validator = $this->getCallableValidatorTransformValues();
+        $validator->setCallableFunction($function);
 
         if ($validator->isValid() === false) {
             throw $validator->getException();
@@ -455,7 +491,8 @@ abstract class AbstractFilter implements
      */
     public function setApplyFilterFunction(callable $function)
     {
-        $validator = new ApplyFiltersFunctionValidator($function);
+        $validator = $this->getCallableValidatorApplyFilters();
+        $validator->setCallableFunction($function);
 
         if ($validator->isValid() === false) {
             throw $validator->getException();
@@ -488,7 +525,8 @@ abstract class AbstractFilter implements
      */
     public function setAppendFormFieldsFunction(callable $function)
     {
-        $validator = new AppendFormFieldsFunctionValidator($function);
+        $validator = $this->getCallableValidatorAppendFormFields();
+        $validator->setCallableFunction($function);
 
         if ($validator->isValid() === false) {
             throw $validator->getException();
@@ -644,6 +682,92 @@ abstract class AbstractFilter implements
         }
 
         $this->formFieldType = $formFieldType;
+
+        return $this;
+    }
+
+    /**
+     * Gets "transform values" callable function validator.
+     *
+     * @return CallableFunctionValidatorInterface|TransformValuesFunctionValidator
+     */
+    public function getCallableValidatorTransformValues()
+    {
+        if ($this->callableValidatorTransformValues === false) {
+            $this->callableValidatorTransformValues = new TransformValuesFunctionValidator();
+        }
+
+        return $this->callableValidatorTransformValues;
+    }
+
+    /**
+     * Sets "transform values" callable function validator.
+     *
+     * @param CallableFunctionValidatorInterface $callableValidatorTransformValues
+     *
+     * @return AbstractFilter
+     */
+    public function setCallableValidatorTransformValues(
+        CallableFunctionValidatorInterface $callableValidatorTransformValues
+    ) {
+        $this->callableValidatorTransformValues = $callableValidatorTransformValues;
+
+        return $this;
+    }
+
+    /**
+     * Sets "append form fields" callable function validator.
+     *
+     * @return CallableFunctionValidatorInterface|AppendFormFieldsFunctionValidator
+     */
+    public function getCallableValidatorAppendFormFields()
+    {
+        if ($this->callableValidatorAppendFormFields === false) {
+            $this->callableValidatorAppendFormFields = new AppendFormFieldsFunctionValidator();
+        }
+
+        return $this->callableValidatorAppendFormFields;
+    }
+
+    /**
+     * Sets "append form fields" callable function validator.
+     *
+     * @param CallableFunctionValidatorInterface $callableValidatorAppendFormFields
+     *
+     * @return AbstractFilter
+     */
+    public function setCallableValidatorAppendFormFields(
+        CallableFunctionValidatorInterface $callableValidatorAppendFormFields
+    ) {
+        $this->callableValidatorAppendFormFields = $callableValidatorAppendFormFields;
+
+        return $this;
+    }
+
+    /**
+     * Gets "apply filters" callable function validator.
+     *
+     * @return CallableFunctionValidatorInterface|ApplyFiltersFunctionValidator
+     */
+    public function getCallableValidatorApplyFilters()
+    {
+        if ($this->callableValidatorApplyFilters === false) {
+            $this->callableValidatorApplyFilters = new ApplyFiltersFunctionValidator();
+        }
+
+        return $this->callableValidatorApplyFilters;
+    }
+
+    /**
+     * Sets "apply filters" callable function validator.
+     *
+     * @param CallableFunctionValidatorInterface $callableValidatorApplyFilters
+     *
+     * @return AbstractFilter
+     */
+    public function setCallableValidatorApplyFilters(CallableFunctionValidatorInterface $callableValidatorApplyFilters)
+    {
+        $this->callableValidatorApplyFilters = $callableValidatorApplyFilters;
 
         return $this;
     }

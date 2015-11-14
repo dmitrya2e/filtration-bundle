@@ -32,7 +32,7 @@ class BaseFunctionValidator
      *
      * @var callable
      */
-    protected $callableFunction;
+    protected $callableFunction = null;
 
     /**
      * Exception of validation.
@@ -42,9 +42,9 @@ class BaseFunctionValidator
     protected $exception = null;
 
     /**
-     * @param callable $callableFunction
+     * @param callable|null $callableFunction
      */
-    function __construct(callable $callableFunction)
+    function __construct(callable $callableFunction = null)
     {
         $this->callableFunction = $callableFunction;
     }
@@ -75,6 +75,20 @@ class BaseFunctionValidator
     public function getException()
     {
         return $this->exception;
+    }
+
+    /**
+     * Sets callable function.
+     *
+     * @param callable $callableFunction
+     *
+     * @return BaseFunctionValidator
+     */
+    public function setCallableFunction(callable $callableFunction)
+    {
+        $this->callableFunction = $callableFunction;
+
+        return $this;
     }
 
     /**

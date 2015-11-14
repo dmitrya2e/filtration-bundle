@@ -6,7 +6,7 @@ namespace Da2e\FiltrationBundle\CallableFunction\Validator;
  * Class AppendFormFieldsFunctionValidator
  * @package Da2e\FiltrationBundle\CallableFunction\Validator
  */
-class AppendFormFieldsFunctionValidator extends BaseFunctionValidator
+class AppendFormFieldsFunctionValidator extends BaseFunctionValidator implements CallableFunctionValidatorInterface
 {
     /**
      * {@inheritdoc}

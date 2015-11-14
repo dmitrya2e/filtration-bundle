@@ -6,7 +6,7 @@ namespace Da2e\FiltrationBundle\CallableFunction\Validator;
  * Class TransformValuesFunctionValidator
  * @package Da2e\FiltrationBundle\CallableFunction\Validator
  */
-class TransformValuesFunctionValidator extends BaseFunctionValidator
+class TransformValuesFunctionValidator extends BaseFunctionValidator implements CallableFunctionValidatorInterface
 {
     /**
      * {@inheritdoc}

@@ -2,6 +2,7 @@
 
 namespace Da2e\FiltrationBundle\Tests\Filter\Filter;
 
+use Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
 use Da2e\FiltrationBundle\Filter\Filter\AbstractFilter;
 use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
@@ -540,6 +541,78 @@ class AbstractFilterTest extends AbstractFilterTestCase
         $this->assertEquals(count($args), $exceptionCount);
     }
 
+    public function testGetCallableValidatorAppendFormFields()
+    {
+        $mock = $this->getAbstractFilterMock();
+        $result = $mock->getCallableValidatorAppendFormFields();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\AppendFormFieldsFunctionValidator',
+            $result
+        );
+    }
+
+    public function testSetCallableValidatorAppendFormFields()
+    {
+        $validator = new CallableFunctionValidatorMock();
+
+        $mock = $this->getAbstractFilterMock();
+        $mock->setCallableValidatorAppendFormFields($validator);
+
+        $result = $mock->getCallableValidatorAppendFormFields();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
+            $result
+        );
+    }
+
+    public function testGetCallableValidatorApplyFilters()
+    {
+        $mock = $this->getAbstractFilterMock();
+        $result = $mock->getCallableValidatorApplyFilters();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\ApplyFiltersFunctionValidator',
+            $result
+        );
+    }
+
+    public function testSetCallableValidatorApplyFilters()
+    {
+        $validator = new CallableFunctionValidatorMock();
+
+        $mock = $this->getAbstractFilterMock();
+        $mock->setCallableValidatorApplyFilters($validator);
+
+        $result = $mock->getCallableValidatorApplyFilters();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
+            $result
+        );
+    }
+
+    public function testGetCallableValidatorTransformValues()
+    {
+        $mock = $this->getAbstractFilterMock();
+        $result = $mock->getCallableValidatorTransformValues();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\TransformValuesFunctionValidator',
+            $result
+        );
+    }
+
+    public function testSetCallableValidatorTransformValues()
+    {
+        $validator = new CallableFunctionValidatorMock();
+
+        $mock = $this->getAbstractFilterMock();
+        $mock->setCallableValidatorTransformValues($validator);
+
+        $result = $mock->getCallableValidatorTransformValues();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
+            $result
+        );
+    }
+
     /**
      * Gets abstract filter mock.
      *
@@ -555,5 +628,22 @@ class AbstractFilterTest extends AbstractFilterTestCase
             $methods,
             [$name]
         );
+    }
+}
+
+/**
+ * Class CallableFunctionValidatorMock
+ * @package Da2e\FiltrationBundle\Tests\Filter\Filter
+ */
+class CallableFunctionValidatorMock implements CallableFunctionValidatorInterface
+{
+    public function isValid()
+    {
+
+    }
+
+    public function setCallableFunction(callable $callableFunction)
+    {
+
     }
 }

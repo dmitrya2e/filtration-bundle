@@ -139,4 +139,18 @@ class BaseFunctionValidatorTest extends TestCase
 
         $this->invokeMethod($baseFunctionValidator, 'doValidate');
     }
+
+    public function testSetCallableFunction()
+    {
+        $baseFunctionValidator = new BaseFunctionValidator();
+
+        $func = $this->getPrivateProperty($baseFunctionValidator, 'callableFunction');
+        $this->assertNull($func->getValue($baseFunctionValidator));
+
+        $baseFunctionValidator->setCallableFunction(function () {
+        });
+
+        $func = $this->getPrivateProperty($baseFunctionValidator, 'callableFunction');
+        $this->assertTrue(is_callable($func->getValue($baseFunctionValidator)));
+    }
 }
