@@ -48,7 +48,7 @@ class ApplyFiltersFunctionValidatorTest extends TestCase
 
     public function testIsValid_False_NoHandlerSpecified()
     {
-        $functionValidator = new ApplyFiltersFunctionValidator(function (AbstractFilter $filter) {
+        $functionValidator = new ApplyFiltersFunctionValidator(function (FilterInterface $filter) {
         });
 
         $this->assertFalse($functionValidator->isValid());

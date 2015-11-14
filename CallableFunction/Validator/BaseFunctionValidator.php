@@ -114,10 +114,12 @@ class BaseFunctionValidator
             $parameter = $reflectionParams[$k];
             $class = $parameter->getClass();
 
-            if ($type['type'] !== null && $type['type'] !== $class->getName()) {
-                throw new CallableFunctionValidatorException(sprintf(
-                    'Argument %s must be type of "%s".', $k, $type['type']
-                ));
+            if ($type['type'] !== null) {
+                if ($class === null || $type['type'] !== $class->getName()) {
+                    throw new CallableFunctionValidatorException(sprintf(
+                        'Argument %s must be type of "%s".', $k, $type['type']
+                    ));
+                }
             }
 
             if (array_key_exists('array', $type) && $type['array'] === true) {
