@@ -9,7 +9,7 @@ use Da2e\FiltrationBundle\Tests\TestCase;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormConfigBuilder;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\Test\FormBuilderInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class FormCreatorTest
@@ -233,102 +233,163 @@ class FormCreatorTest extends TestCase
         $this->assertSame('form', $result);
     }
 
-    // [TODO]: fix this test. Mocked object \Symfony\Component\Form\FormBuilder does not implement FormBuilder interface.
-    // $mockedFormBuilder instanceof FormBuilderInterface = false
-//    public function testCreateForm()
-//    {
-//        $formFactoryMock = $this->getFormFactoryMock();
-//        $formCreatorMock = $this->getFormCreatorMock(
-//            ['validateConfig', 'createFilterFormType', 'appendFormField', 'createFormBuilder'],
-//            [$formFactoryMock, []]
-//        );
-//
-//        $filterClass = 'Da2e\FiltrationBundle\Filter\Filter\AbstractFilter';
-//        $filterMethods = ['hasForm', 'getName'];
-//
-//        $filterCollection = new Collection();
-//
-//        // Only 2 of filters must be used in form creation.
-//        $filter1 = $this->getAbstractFilterMock($filterClass, $filterMethods);
-//        $filter2 = $this->getAbstractFilterMock($filterClass, $filterMethods);
-//        $filter3 = $this->getAbstractFilterMock($filterClass, $filterMethods);
-//
-//        // This filter has not FilterHasForm interface.
-//        $filter4 = $this->getAbstractFilterMock('Da2e\FiltrationBundle\Filter\Filter\FilterInterface', ['getName']);
-//
-//        $filter1->expects($this->atLeastOnce())->method('hasForm')->willReturn(true);
-//        $filter1->expects($this->atLeastOnce())->method('getName')->willReturn('name_1');
-//
-//        // Has form = false
-//        $filter2->expects($this->atLeastOnce())->method('hasForm')->willReturn(false);
-//        $filter2->expects($this->atLeastOnce())->method('getName')->willReturn('name_2');
-//
-//        $filter3->expects($this->atLeastOnce())->method('hasForm')->willReturn(true);
-//        $filter3->expects($this->atLeastOnce())->method('getName')->willReturn('name_3');
-//
-//        $filter4->expects($this->atLeastOnce())->method('getName')->willReturn('name_4');
-//
-//        // createFilterFormType expectations
-//        $formCreatorMock->expects($this->at(0))->method('createFilterFormType')->willReturn('filter_form_type_1');
-//        $formCreatorMock->expects($this->at(1))->method('createFilterFormType')->willReturn('filter_form_type_3');
-//        $formCreatorMock->expects($this->exactly(2))->method('createFilterFormType');
-//
-//        // createFormBuilder expectations
-//        $filterFormBuilder1 = $this->getCustomMock('\Symfony\Component\Form\FormBuilder');
-//        $filterFormBuilder3 = $this->getCustomMock('\Symfony\Component\Form\FormBuilder');
-//
-//        // 0 - create root form builder
-//        $rootFormBuilder = $this->getCustomAbstractMock('\Symfony\Component\Form\FormBuilderInterface', [
-//            'add',
-//            'getForm'
-//        ]);
-//
-//        $rootFormBuilder->expects($this->at(0))->method('add')->with($filterFormBuilder1);
-//        $rootFormBuilder->expects($this->at(1))->method('add')->with($filterFormBuilder3);
-//        $rootFormBuilder->expects($this->exactly(2))->method('add');
-//        $rootFormBuilder->expects($this->atLeastOnce())->method('getForm')->willReturn('form');
-//
-//        $formCreatorMock->expects($this->at(0))->method('createFormBuilder')
-//            ->with(null, 'form', null, [])
-//            ->willReturn($rootFormBuilder);
-//
-//        // 1 and 2 - create form builders for each filter with form
-//        $formCreatorMock->expects($this->at(1))->method('createFormBuilder')
-//            ->with('name_1', 'filter_form_type_1', $filter1, [
-//                'data_class' => get_class($filter1),
-//            ])
-//            ->willReturn($filterFormBuilder1);
-//
-//        $formCreatorMock->expects($this->at(2))->method('createFormBuilder')
-//            ->with('name_3', 'filter_form_type_3', $filter3, [
-//                'data_class' => get_class($filter3),
-//            ])
-//            ->willReturn($filterFormBuilder3);
-//
-//        $formCreatorMock->expects($this->exactly(3))->method('createFormBuilder');
-//
-//        // appendFormField expectations
-//        $formCreatorMock->expects($this->at(0))->method('appendFormField')->with($filter1, $filterFormBuilder1);
-//        $formCreatorMock->expects($this->at(1))->method('appendFormField')->with($filter3, $filterFormBuilder3);
-//        $formCreatorMock->expects($this->exactly(2))->method('appendFormField');
-//
-//        $filterCollection->addFilter($filter1);
-//        $filterCollection->addFilter($filter2);
-//        $filterCollection->addFilter($filter3);
-//        $filterCollection->addFilter($filter4);
-//
-//        $result = $this->invokeMethod($formCreatorMock, 'createForm', [$filterCollection]);
-//        $this->assertSame('form', $result);
-//    }
+    public function testCreateForm()
+    {
+        $formFactoryMock = $this->getFormFactoryMock();
+        $formCreatorMock = $this->getFormCreatorMock(
+            ['validateConfig', 'createFilterFormType', 'appendFormField', 'createFormBuilder'],
+            [$formFactoryMock, []]
+        );
 
-    // [TODO]: copy testCreateForm() and check it with custom params (testCreateForm_CustomParams()).
+        $filterClass = 'Da2e\FiltrationBundle\Filter\Filter\AbstractFilter';
+
+        // This filter must be used in form creation.
+        $filter1 = $this->getAbstractFilterMock($filterClass, [], ['name_1']);
+        $filter1->setHasForm(true);
+
+        // Has form = false
+        $filter2 = $this->getAbstractFilterMock($filterClass, [], ['name_2']);
+        $filter2->setHasForm(false);
+
+        // This filter must be used in form creation.
+        $filter3 = $this->getAbstractFilterMock($filterClass, [], ['name_3']);
+        $filter3->setHasForm(true);
+
+        // This filter does not implement FilterHasForm interface.
+        $filter4 = $this->getAbstractFilterMock('Da2e\FiltrationBundle\Filter\Filter\FilterInterface', [], ['name_4']);
+
+        $filterCollection = new Collection();
+        $filterCollection->addFilter($filter1);
+        $filterCollection->addFilter($filter2);
+        $filterCollection->addFilter($filter3);
+        $filterCollection->addFilter($filter4);
+
+        $filterFormBuilder1 = $this->getCustomAbstractMock('\Symfony\Component\Form\FormBuilderInterface', []);
+        $filterFormBuilder3 = $this->getCustomAbstractMock('\Symfony\Component\Form\FormBuilderInterface', []);
+        $rootFormBuilder = $this->getCustomAbstractMock('\Symfony\Component\Form\FormBuilderInterface', [
+            'add',
+            'getForm',
+        ]);
+
+        $rootFormBuilder->expects($this->at(0))->method('add')->with($filterFormBuilder1);
+        $rootFormBuilder->expects($this->at(1))->method('add')->with($filterFormBuilder3);
+        $rootFormBuilder->expects($this->exactly(2))->method('add');
+        $rootFormBuilder->expects($this->atLeastOnce())->method('getForm')->willReturn('form');
+
+        $formCreatorMock->expects($this->at(0))->method('createFormBuilder')
+            ->with(null, 'form', null, [])
+            ->willReturn($rootFormBuilder);
+        $formCreatorMock->expects($this->at(1))->method('createFilterFormType')->willReturn('filter_form_type_1');
+        $formCreatorMock->expects($this->at(2))->method('createFormBuilder')
+            ->with('name_1', 'filter_form_type_1', $filter1, [
+                'data_class' => get_class($filter1),
+            ])
+            ->will($this->returnValue($filterFormBuilder1));
+
+        $formCreatorMock->expects($this->at(3))->method('appendFormField')->with($filter1, $filterFormBuilder1);
+        $formCreatorMock->expects($this->at(4))->method('createFilterFormType')->willReturn('filter_form_type_3');
+        $formCreatorMock->expects($this->at(5))->method('createFormBuilder')
+            ->with('name_3', 'filter_form_type_3', $filter3, [
+                'data_class' => get_class($filter3),
+            ])
+            ->willReturn($filterFormBuilder3);
+        $formCreatorMock->expects($this->at(6))->method('appendFormField')->with($filter3, $filterFormBuilder3);
+
+        $formCreatorMock->expects($this->exactly(2))->method('createFilterFormType');
+        $formCreatorMock->expects($this->exactly(3))->method('createFormBuilder');
+        $formCreatorMock->expects($this->exactly(2))->method('appendFormField');
+
+        $result = $this->invokeMethod($formCreatorMock, 'createForm', [$filterCollection]);
+        $this->assertSame('form', $result);
+    }
+
+    public function testCreateForm_WithCustomParams()
+    {
+        $formFactoryMock = $this->getFormFactoryMock();
+        $formCreatorMock = $this->getFormCreatorMock(
+            ['validateConfig', 'createFilterFormType', 'appendFormField', 'createFormBuilder'],
+            [$formFactoryMock, []]
+        );
+
+        $filterClass = 'Da2e\FiltrationBundle\Filter\Filter\AbstractFilter';
+
+        // This filter must be used in form creation.
+        $filter1 = $this->getAbstractFilterMock($filterClass, [], ['name_1']);
+        $filter1->setHasForm(true);
+
+        // Has form = false
+        $filter2 = $this->getAbstractFilterMock($filterClass, [], ['name_2']);
+        $filter2->setHasForm(false);
+
+        // This filter must be used in form creation.
+        $filter3 = $this->getAbstractFilterMock($filterClass, [], ['name_3']);
+        $filter3->setHasForm(true);
+
+        // This filter does not implement FilterHasForm interface.
+        $filter4 = $this->getAbstractFilterMock('Da2e\FiltrationBundle\Filter\Filter\FilterInterface', [], ['name_4']);
+
+        $filterCollection = new Collection();
+        $filterCollection->addFilter($filter1);
+        $filterCollection->addFilter($filter2);
+        $filterCollection->addFilter($filter3);
+        $filterCollection->addFilter($filter4);
+
+        $filterFormBuilder1 = $this->getCustomAbstractMock('\Symfony\Component\Form\FormBuilderInterface', []);
+        $filterFormBuilder3 = $this->getCustomAbstractMock('\Symfony\Component\Form\FormBuilderInterface', []);
+        $rootFormBuilder = $this->getCustomAbstractMock('\Symfony\Component\Form\FormBuilderInterface', [
+            'add',
+            'getForm',
+        ]);
+
+        $rootFormBuilder->expects($this->at(0))->method('add')->with($filterFormBuilder1);
+        $rootFormBuilder->expects($this->at(1))->method('add')->with($filterFormBuilder3);
+        $rootFormBuilder->expects($this->exactly(2))->method('add');
+        $rootFormBuilder->expects($this->atLeastOnce())->method('getForm')->willReturn('form');
+
+        $formCreatorMock->expects($this->at(0))->method('createFormBuilder')
+            ->with('form_name', 'form', null, ['root' => 'options'])
+            ->willReturn($rootFormBuilder);
+        $formCreatorMock->expects($this->at(1))->method('createFilterFormType')->willReturn('filter_form_type_1');
+        $formCreatorMock->expects($this->at(2))->method('createFormBuilder')
+            ->with('name_1', 'filter_form_type_1', $filter1, [
+                'filter'     => 'options',
+                'data_class' => get_class($filter1),
+            ])
+            ->will($this->returnValue($filterFormBuilder1));
+
+        $formCreatorMock->expects($this->at(3))->method('appendFormField')->with($filter1, $filterFormBuilder1);
+        $formCreatorMock->expects($this->at(4))->method('createFilterFormType')->willReturn('filter_form_type_3');
+        $formCreatorMock->expects($this->at(5))->method('createFormBuilder')
+            ->with('name_3', 'filter_form_type_3', $filter3, [
+                'filter'     => 'options',
+                'data_class' => get_class($filter3),
+            ])
+            ->willReturn($filterFormBuilder3);
+        $formCreatorMock->expects($this->at(6))->method('appendFormField')->with($filter3, $filterFormBuilder3);
+
+        $formCreatorMock->expects($this->exactly(2))->method('createFilterFormType');
+        $formCreatorMock->expects($this->exactly(3))->method('createFormBuilder');
+        $formCreatorMock->expects($this->exactly(2))->method('appendFormField');
+
+        $result = $this->invokeMethod($formCreatorMock, 'createForm', [
+            $filterCollection,
+            'form_name',
+            ['root' => 'options'],
+            ['filter' => 'options']
+        ]);
+
+        $this->assertSame('form', $result);
+    }
 
     public function testCreateFilterFormType()
     {
         $formFactoryMock = $this->getFormFactoryMock();
-        $formCreatorMock = $this->getFormCreatorMock(null, [$formFactoryMock, [
-            'form_filter_type_class' => '\stdClass',
-        ]]);
+        $formCreatorMock = $this->getFormCreatorMock(null, [
+            $formFactoryMock,
+            [
+                'form_filter_type_class' => '\stdClass',
+            ]
+        ]);
 
         $result = $this->invokeMethod($formCreatorMock, 'createFilterFormType');
         $this->assertInstanceOf('\stdClass', $result);

@@ -94,7 +94,7 @@ class FormCreator implements FormCreatorInterface
         $rootFormBuilder = $this->createFormBuilder($name, 'form', null, $rootFormBuilderOptions);
 
         if ($filterCollection->hasFilters()) {
-            foreach ($filterCollection->getFilters() as $filter) {
+            foreach ($filterCollection as $filter) {
                 if (!($filter instanceof FilterHasFormInterface) || $filter->hasForm() !== true) {
                     // Create a form for only filters, which have a form representation.
                     continue;
