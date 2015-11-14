@@ -47,5 +47,29 @@ class FiltrationExtensionTest extends TestCase
         $this->assertSame('\SphinxClient', $result['sphinx_api']);
         $this->assertSame('FooClass', $result['foo']);
         $this->assertSame('BarClass', $result['bar']);
+
+        $disabledServices = [
+            'da2e.filtration.filter.filter.doctrine.orm.text_filter',
+            'da2e.filtration.filter.filter.doctrine.orm.number_filter',
+            'da2e.filtration.filter.filter.doctrine.orm.date_filter',
+            'da2e.filtration.filter.filter.doctrine.orm.choice_filter',
+            'da2e.filtration.filter.filter.doctrine.orm.entity_filter',
+        ];
+
+        foreach ($disabledServices as $service) {
+            $this->assertFalse($containerBuilder->has($service));
+        }
+
+        $enabledServices = [
+            'da2e.filtration.filter.filter.sphinx.api.text_filter',
+            'da2e.filtration.filter.filter.sphinx.api.number_filter',
+            'da2e.filtration.filter.filter.sphinx.api.date_filter',
+            'da2e.filtration.filter.filter.sphinx.api.choice_filter',
+            'da2e.filtration.filter.filter.sphinx.api.entity_filter',
+        ];
+
+        foreach ($enabledServices as $service) {
+            $this->assertTrue($containerBuilder->has($service));
+        }
     }
 }
