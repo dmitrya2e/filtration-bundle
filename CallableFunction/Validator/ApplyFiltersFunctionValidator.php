@@ -11,12 +11,9 @@ class ApplyFiltersFunctionValidator extends BaseFunctionValidator
     /**
      * {@inheritdoc}
      */
-    protected $argumentTypes = array(
-        // Abstract filter object.
-        0 => array(
-            'type' => 'Da2e\FiltrationBundle\Filter\Filter\FilterInterface'
-        ),
-        // Filtration handler object. It may be not validated, because it is polymorphic.
-        1 => array('omit' => true)
-    );
+    protected $argumentTypes = [
+        ['type' => 'Da2e\FiltrationBundle\Filter\Filter\FilterInterface'],
+        // Filtration handler object, which does not have strict type hint.
+        ['omit' => true],
+    ];
 }
