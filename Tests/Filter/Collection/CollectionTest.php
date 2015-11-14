@@ -92,4 +92,36 @@ class CollectionTest extends TestCase
         $collection->removeFilterByName('foobar');
         $this->assertFalse($collection->hasFilters());
     }
+
+    public function testOrderOfFilters()
+    {
+        $collection = new Collection();
+
+        $filter1 = $this->getCustomAbstractMock('\Da2e\FiltrationBundle\Filter\Filter\FilterInterface', ['getName']);
+        $filter1->expects($this->any())->method('getName')->willReturn('foo');
+
+        $filter2 = $this->getCustomAbstractMock('\Da2e\FiltrationBundle\Filter\Filter\FilterInterface', ['getName']);
+        $filter2->expects($this->any())->method('getName')->willReturn('baz');
+
+        $filter3 = $this->getCustomAbstractMock('\Da2e\FiltrationBundle\Filter\Filter\FilterInterface', ['getName']);
+        $filter3->expects($this->any())->method('getName')->willReturn('bar');
+
+        $collection->addFilter($filter1);
+        $collection->addFilter($filter2);
+        $collection->addFilter($filter3);
+
+        $i = 0;
+
+        foreach ($collection as $filter) {
+            if ($i === 0) {
+                $this->assertSame($filter1, $filter);
+            } elseif ($i === 1) {
+                $this->assertSame($filter2, $filter);
+            } elseif ($i === 2) {
+                $this->assertSame($filter3, $filter);
+            }
+
+            $i++;
+        }
+    }
 }
