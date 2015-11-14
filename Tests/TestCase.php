@@ -11,7 +11,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
+     * @param object $object     Instantiated object that we will run method on.
      * @param string $methodName Method name to call
      * @param array  $parameters Array of parameters to pass into method.
      *
@@ -29,18 +29,38 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * getPrivateProperty
      *
-     * @author    Joe Sexton <joe@webtipblog.com>
+     * @author Joe Sexton <joe@webtipblog.com>
      *
-     * @param    string $className
-     * @param    string $propertyName
+     * @param string $className
+     * @param string $propertyName
      *
-     * @return    \ReflectionProperty
+     * @return \ReflectionProperty
      */
     protected function getPrivateProperty($className, $propertyName)
     {
         $reflector = new \ReflectionClass($className);
         $property = $reflector->getProperty($propertyName);
         $property->setAccessible(true);
+
+        return $property;
+    }
+
+    /**
+     * Sets private property value.
+     *
+     * @param object $object
+     * @param string $propertyName
+     * @param mixed  $value
+     *
+     * @return \ReflectionProperty
+     */
+    protected function setPrivatePropertyValue($object, $propertyName, $value)
+    {
+        $reflector = new \ReflectionClass($object);
+        $property = $reflector->getProperty($propertyName);
+        $property->setAccessible(true);
+        $property->setValue($object, $value);
+        $property->setAccessible(false);
 
         return $property;
     }

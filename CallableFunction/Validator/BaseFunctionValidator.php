@@ -14,17 +14,16 @@ class BaseFunctionValidator
      * Allowed argument type names in callable function.
      * It must consist of array with the following structure:
      *  array(
-     *      0 => array('type' => 'Fully\Qualified\Name', 'omit' => true/false),
-     *      1 => array('type' => null, 'omit' => true/false, 'array' => true/false),
-     *      2 => ...,
+     *      0 => array('type' => 'Fully\Qualified\Name', 'omit' => bool),
+     *      1 => array('type' => null, 'omit' => true/false, 'array' => bool),
      *      n => ...,
      *  );
      *
-     * Key "type" is defining the FQN of the class or NULL, if the argument is passed without type hinting.
-     * Key "omit" tells if the validator should validate the argument or not.
-     * Key "array" tells if the argument must be type of array.
+     * Key "type" defines the FQN of the class or NULL, if the argument is passed without type hinting.
+     * Key "omit" defines if the validator should validate the argument or not.
+     * Key "array" defines if the argument must be type of array.
      *
-     * @var array
+     * @var array|bool
      */
     protected $argumentTypes = false;
 
@@ -82,6 +81,7 @@ class BaseFunctionValidator
      * Validates callable function arguments.
      *
      * @throws CallableFunctionValidatorException
+     * @throws \InvalidArgumentException
      */
     protected function doValidate()
     {
@@ -114,7 +114,7 @@ class BaseFunctionValidator
             $parameter = $reflectionParams[$k];
             $class = $parameter->getClass();
 
-            if ($type['type'] !== $class->getName()) {
+            if ($type['type'] !== null && $type['type'] !== $class->getName()) {
                 throw new CallableFunctionValidatorException(sprintf(
                     'Argument %s must be type of "%s".', $k, $type['type']
                 ));
