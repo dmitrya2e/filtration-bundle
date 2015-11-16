@@ -4,6 +4,7 @@ namespace Da2e\FiltrationBundle\Tests\Filter\Filter;
 
 use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
 use Da2e\FiltrationBundle\Filter\Filter\AbstractRangeOrSingleFilter;
+use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
 
 /**
  * Class AbstractRangeOrSingleFilterTest
@@ -136,6 +137,41 @@ class AbstractRangeOrSingleFilterTest extends AbstractFilterTestCase
         $abstractRangeOrSingleFilterMock->expects($this->any())->method('getConvertedFromValue')->willReturn('foo');
         $abstractRangeOrSingleFilterMock->expects($this->any())->method('getConvertedToValue')->willReturn('bar');
         $this->assertTrue($abstractRangeOrSingleFilterMock->hasAppliedValue());
+    }
+
+    public function testHasAppliedValue_CustomFunction_True()
+    {
+        $abstractRangeOrSingleFilterMock = $this->getAbstractRangeOrSingleFilterMock(['getConvertedValueFrom']);
+        $abstractRangeOrSingleFilterMock->setHasAppliedValueFunction(function(FilterInterface $filter) {
+            return $filter->getConvertedValueFrom() === 'foobar';
+        });
+
+        $abstractRangeOrSingleFilterMock->expects($this->once())->method('getConvertedValueFrom')->willReturn('barfoo');
+        $this->assertFalse($abstractRangeOrSingleFilterMock->hasAppliedValue());
+    }
+
+    public function testHasAppliedValue_CustomFunction_False()
+    {
+        $abstractRangeOrSingleFilterMock = $this->getAbstractRangeOrSingleFilterMock(['getConvertedValueFrom']);
+        $abstractRangeOrSingleFilterMock->setHasAppliedValueFunction(function(FilterInterface $filter) {
+            return $filter->getConvertedValueFrom() === 'foobar';
+        });
+
+        $abstractRangeOrSingleFilterMock->expects($this->once())->method('getConvertedValueFrom')->willReturn('foobar');
+        $this->assertTrue($abstractRangeOrSingleFilterMock->hasAppliedValue());
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException
+     */
+    public function testHasAppliedValue_CustomFunction_ExceptionOnInvalidReturnValue()
+    {
+        $abstractRangeOrSingleFilterMock = $this->getAbstractRangeOrSingleFilterMock(['getConvertedValue']);
+        $abstractRangeOrSingleFilterMock->setHasAppliedValueFunction(function(FilterInterface $filter) {
+            return 'foo';
+        });
+
+        $abstractRangeOrSingleFilterMock->hasAppliedValue();
     }
 
     public function testGetFromValue()

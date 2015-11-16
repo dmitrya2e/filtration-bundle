@@ -47,13 +47,13 @@ class AbstractFilterTest extends AbstractFilterTestCase
         $this->invokeMethod($this->getAbstractFilterMock(), 'appendFormFieldsToForm', [$this->getFormBuilderMock()]);
     }
 
-    public function testHasAppliedValues()
+    public function testHasAppliedValue()
     {
         $abstractFilterMock = $this->getAbstractFilterMock();
         $this->assertFalse($abstractFilterMock->hasAppliedValue());
     }
 
-    public function testHasAppliedValues_True()
+    public function testHasAppliedValue_True()
     {
         $abstractFilterMock = $this->getAbstractFilterMock(['getConvertedValue']);
         $abstractFilterMock->expects($this->at(0))->method('getConvertedValue')->willReturn(['foo', 'bar']);
@@ -69,7 +69,7 @@ class AbstractFilterTest extends AbstractFilterTestCase
         $this->assertTrue($abstractFilterMock->hasAppliedValue());
     }
 
-    public function testHasAppliedValues_False()
+    public function testHasAppliedValue_False()
     {
         $abstractFilterMock = $this->getAbstractFilterMock(['getConvertedValue']);
         $abstractFilterMock->expects($this->at(0))->method('getConvertedValue')->willReturn([]);
@@ -81,6 +81,41 @@ class AbstractFilterTest extends AbstractFilterTestCase
         $this->assertFalse($abstractFilterMock->hasAppliedValue());
         $this->assertFalse($abstractFilterMock->hasAppliedValue());
         $this->assertFalse($abstractFilterMock->hasAppliedValue());
+    }
+
+    public function testHasAppliedValue_CustomFunction_True()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock(['getConvertedValue']);
+        $abstractFilterMock->setHasAppliedValueFunction(function(FilterInterface $filter) {
+            return $filter->getConvertedValue() === 'foobar';
+        });
+
+        $abstractFilterMock->expects($this->once())->method('getConvertedValue')->willReturn('barfoo');
+        $this->assertFalse($abstractFilterMock->hasAppliedValue());
+    }
+
+    public function testHasAppliedValue_CustomFunction_False()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock(['getConvertedValue']);
+        $abstractFilterMock->setHasAppliedValueFunction(function(FilterInterface $filter) {
+            return $filter->getConvertedValue() === 'foobar';
+        });
+
+        $abstractFilterMock->expects($this->once())->method('getConvertedValue')->willReturn('foobar');
+        $this->assertTrue($abstractFilterMock->hasAppliedValue());
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException
+     */
+    public function testHasAppliedValue_CustomFunction_ExceptionOnInvalidReturnValue()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock(['getConvertedValue']);
+        $abstractFilterMock->setHasAppliedValueFunction(function(FilterInterface $filter) {
+            return 'foo';
+        });
+
+        $abstractFilterMock->hasAppliedValue();
     }
 
     public function testGetConvertedValue()
@@ -277,6 +312,35 @@ class AbstractFilterTest extends AbstractFilterTestCase
         };
 
         $abstractFilterMock->setTransformValuesFunction($function);
+    }
+
+    public function testGetHasAppliedValueFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertNull($abstractFilterMock->getHasAppliedValueFunction());
+    }
+
+    public function testHasAppliedValueFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function (FilterInterface $abstractFilterMock) {
+        };
+
+        $abstractFilterMock->setHasAppliedValueFunction($function);
+
+        $this->assertSame($function, $abstractFilterMock->getHasAppliedValueFunction());
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException
+     */
+    public function testHasAppliedValueFunction_InvalidFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function () {
+        };
+
+        $abstractFilterMock->setHasAppliedValueFunction($function);
     }
 
     public function testGetApplyFilterFunction()
@@ -607,6 +671,30 @@ class AbstractFilterTest extends AbstractFilterTestCase
         $mock->setCallableValidatorTransformValues($validator);
 
         $result = $mock->getCallableValidatorTransformValues();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
+            $result
+        );
+    }
+
+    public function testGetCallableValidatorHasAppliedValue()
+    {
+        $mock = $this->getAbstractFilterMock();
+        $result = $mock->getCallableValidatorHasAppliedValue();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\HasAppliedValueFunctionValidator',
+            $result
+        );
+    }
+
+    public function testSetCallableValidatorHasAppliedValue()
+    {
+        $validator = new CallableFunctionValidatorMock();
+
+        $mock = $this->getAbstractFilterMock();
+        $mock->setCallableValidatorHasAppliedValue($validator);
+
+        $result = $mock->getCallableValidatorHasAppliedValue();
         $this->assertInstanceOf(
             '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
             $result
