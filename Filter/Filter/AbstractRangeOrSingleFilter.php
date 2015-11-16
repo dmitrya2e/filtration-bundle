@@ -224,18 +224,6 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     /**
      * {@inheritDoc}
      */
-    protected function convertValue()
-    {
-        if ($this->isSingle() === true) {
-            return $this->convertSingleValue();
-        }
-
-        return $this->convertRangedValue();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public static function getValidOptions()
     {
         return array_merge(parent::getValidOptions(), [
@@ -290,6 +278,18 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
                 'type'   => 'string',
             ],
         ]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function convertValue()
+    {
+        if ($this->isSingle() === true) {
+            return $this->convertSingleValue();
+        }
+
+        return $this->convertRangedValue();
     }
 
     /**
