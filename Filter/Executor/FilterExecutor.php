@@ -5,7 +5,6 @@ namespace Da2e\FiltrationBundle\Filter\Executor;
 use Da2e\FiltrationBundle\Exception\Filter\Executor\FilterExecutorException;
 use Da2e\FiltrationBundle\Filter\Collection\CollectionInterface;
 use Da2e\FiltrationBundle\Filter\Filter\CustomApplyFilterInterface;
-use Da2e\FiltrationBundle\Filter\Filter\CustomTransformValuesInterface;
 use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
 
 /**
@@ -57,10 +56,7 @@ class FilterExecutor implements FilterExecutorInterface
                 ));
             }
 
-            $handler = $this->registeredHandlers[$handlerType];
-
-            $this->transformValues($filter);
-            $this->applyFilter($filter, $handler);
+            $this->applyFilter($filter, $this->registeredHandlers[$handlerType]);
         }
 
         return $this;
@@ -145,28 +141,6 @@ class FilterExecutor implements FilterExecutorInterface
         }
 
         return call_user_func($filter->getApplyFilterFunction(), $filter, $handler);
-    }
-
-    /**
-     * Transforms filter values if a custom function is defined.
-     *
-     * @param FilterInterface|CustomTransformValuesInterface $filter
-     *
-     * @return static
-     */
-    protected function transformValues($filter)
-    {
-        if (!($filter instanceof CustomTransformValuesInterface)) {
-            return $filter;
-        }
-
-        $callableFunction = $filter->getTransformValuesFunction();
-
-        if (is_callable($callableFunction)) {
-            return call_user_func($callableFunction, $filter);
-        }
-
-        return $filter;
     }
 
     /**

@@ -6,7 +6,6 @@ use Da2e\FiltrationBundle\CallableFunction\Validator\AppendFormFieldsFunctionVal
 use Da2e\FiltrationBundle\CallableFunction\Validator\ApplyFiltersFunctionValidator;
 use Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface;
 use Da2e\FiltrationBundle\CallableFunction\Validator\HasAppliedValueFunctionValidator;
-use Da2e\FiltrationBundle\CallableFunction\Validator\TransformValuesFunctionValidator;
 use Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
@@ -31,8 +30,7 @@ abstract class AbstractFilter implements
     FilterOptionInterface,
     FilterHasFormInterface,
     CustomApplyFilterInterface,
-    CustomAppendFormFieldsInterface,
-    CustomTransformValuesInterface
+    CustomAppendFormFieldsInterface
 {
     /**
      * Internal name of the filter:
@@ -100,14 +98,6 @@ abstract class AbstractFilter implements
     protected $appendFormFieldsFunction = null;
 
     /**
-     * Custom function for value transformation.
-     * Should be the type of "callable".
-     *
-     * @var null|callable Null by default
-     */
-    protected $transformValuesFunction = null;
-
-    /**
      * Custom function for checking if the filter has been applied.
      * Should be the type of "callable".
      *
@@ -161,13 +151,6 @@ abstract class AbstractFilter implements
      * @var string "value" by default
      */
     protected $valuePropertyName = 'value';
-
-    /**
-     * Callable function "transform values" validator.
-     *
-     * @var bool|CallableFunctionValidatorInterface|TransformValuesFunctionValidator
-     */
-    protected $callableValidatorTransformValues = false;
 
     /**
      * Callable function "append form fields" validator.
@@ -259,11 +242,6 @@ abstract class AbstractFilter implements
                 'empty'  => false,
                 'type'   => 'callable',
             ],
-            'transform_values_function'             => [
-                'setter' => 'setTransformValuesFunction',
-                'empty'  => false,
-                'type'   => 'callable',
-            ],
             'has_applied_value_function'            => [
                 'setter' => 'setHasAppliedValueFunction',
                 'empty'  => false,
@@ -278,12 +256,6 @@ abstract class AbstractFilter implements
             ],
             'callable_validator_append_form_fields' => [
                 'setter'      => 'setCallableValidatorAppendFormFields',
-                'empty'       => false,
-                'type'        => 'object',
-                'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
-            ],
-            'callable_validator_transform_values'   => [
-                'setter'      => 'setCallableValidatorTransformValues',
                 'empty'       => false,
                 'type'        => 'object',
                 'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
@@ -496,40 +468,6 @@ abstract class AbstractFilter implements
     public function getFormOptions()
     {
         return $this->formOptions;
-    }
-
-    /**
-     * Sets custom "transform values" function.
-     *
-     * @param callable $function
-     *
-     * @see TransformValuesFunctionValidator
-     *
-     * @return static
-     * @throws CallableFunctionValidatorException On invalid callable arguments
-     */
-    public function setTransformValuesFunction(callable $function)
-    {
-        $validator = $this->getCallableValidatorTransformValues();
-        $validator->setCallableFunction($function);
-
-        if ($validator->isValid() === false) {
-            throw $validator->getException();
-        }
-
-        $this->transformValuesFunction = $function;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return null|callable
-     */
-    public function getTransformValuesFunction()
-    {
-        return $this->transformValuesFunction;
     }
 
     /**
@@ -770,35 +708,6 @@ abstract class AbstractFilter implements
         }
 
         $this->formFieldType = $formFieldType;
-
-        return $this;
-    }
-
-    /**
-     * Gets "transform values" callable function validator.
-     *
-     * @return CallableFunctionValidatorInterface|TransformValuesFunctionValidator
-     */
-    public function getCallableValidatorTransformValues()
-    {
-        if ($this->callableValidatorTransformValues === false) {
-            $this->callableValidatorTransformValues = new TransformValuesFunctionValidator();
-        }
-
-        return $this->callableValidatorTransformValues;
-    }
-
-    /**
-     * Sets "transform values" callable function validator.
-     *
-     * @param CallableFunctionValidatorInterface $callableValidatorTransformValues
-     *
-     * @return AbstractFilter
-     */
-    public function setCallableValidatorTransformValues(
-        CallableFunctionValidatorInterface $callableValidatorTransformValues
-    ) {
-        $this->callableValidatorTransformValues = $callableValidatorTransformValues;
 
         return $this;
     }

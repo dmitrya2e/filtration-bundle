@@ -27,15 +27,12 @@ class FilterExecutorTest extends TestCase
         $handler = new \stdClass();
         $filterExecutorMock = $this->getCustomMock(
             '\Da2e\FiltrationBundle\Filter\Executor\FilterExecutor',
-            ['transformValues', 'applyFilter'],
+            ['applyFilter'],
             [['doctrine_orm' => '\stdClass']]
         );
 
-        $filterExecutorMock->expects($this->at(0))->method('transformValues')->with($filter1);
-        $filterExecutorMock->expects($this->at(1))->method('applyFilter')->with($filter1, $handler);
-        $filterExecutorMock->expects($this->at(2))->method('transformValues')->with($filter2);
-        $filterExecutorMock->expects($this->at(3))->method('applyFilter')->with($filter2, $handler);
-        $filterExecutorMock->expects($this->exactly(2))->method('transformValues');
+        $filterExecutorMock->expects($this->at(0))->method('applyFilter')->with($filter1, $handler);
+        $filterExecutorMock->expects($this->at(1))->method('applyFilter')->with($filter2, $handler);
         $filterExecutorMock->expects($this->exactly(2))->method('applyFilter');
 
         $filterExecutorMock->execute($collection, [new \stdClass()]);
@@ -55,15 +52,12 @@ class FilterExecutorTest extends TestCase
         $handler = new \stdClass();
         $filterExecutorMock = $this->getCustomMock(
             '\Da2e\FiltrationBundle\Filter\Executor\FilterExecutor',
-            ['transformValues', 'applyFilter'],
+            ['applyFilter'],
             [['doctrine_orm' => '\stdClass']]
         );
 
-        $filterExecutorMock->expects($this->at(0))->method('transformValues')->with($filter1);
-        $filterExecutorMock->expects($this->at(1))->method('applyFilter')->with($filter1, $handler);
-        $filterExecutorMock->expects($this->at(2))->method('transformValues')->with($filter2);
-        $filterExecutorMock->expects($this->at(3))->method('applyFilter')->with($filter2, $handler);
-        $filterExecutorMock->expects($this->exactly(2))->method('transformValues');
+        $filterExecutorMock->expects($this->at(0))->method('applyFilter')->with($filter1, $handler);
+        $filterExecutorMock->expects($this->at(1))->method('applyFilter')->with($filter2, $handler);
         $filterExecutorMock->expects($this->exactly(2))->method('applyFilter');
 
         $filterExecutorMock->execute($collection, ['doctrine_orm' => new \stdClass()]);
@@ -72,15 +66,12 @@ class FilterExecutorTest extends TestCase
     public function testHandle_NoFilters()
     {
         $collection = new Collection();
-        $handler = new \stdClass();
-
         $filterExecutorMock = $this->getCustomMock(
             '\Da2e\FiltrationBundle\Filter\Executor\FilterExecutor',
-            ['transformValues', 'applyFilter'],
+            ['applyFilter'],
             [['doctrine_orm' => '\stdClass']]
         );
 
-        $filterExecutorMock->expects($this->never())->method('transformValues');
         $filterExecutorMock->expects($this->never())->method('applyFilter');
         $filterExecutorMock->execute($collection, [new \stdClass()]);
     }
@@ -95,8 +86,6 @@ class FilterExecutorTest extends TestCase
         $collection->addFilter($filter1);
 
         $filterExecutorMock = $this->getCustomMock('\Da2e\FiltrationBundle\Filter\Executor\FilterExecutor');
-
-        $filterExecutorMock->expects($this->never())->method('transformValues');
         $filterExecutorMock->expects($this->never())->method('applyFilter');
         $filterExecutorMock->execute($collection, [new \stdClass()]);
     }
@@ -244,43 +233,6 @@ class FilterExecutorTest extends TestCase
         $filterMock->expects($this->atLeastOnce())->method('getApplyFilterFunction')->willReturn('foobar');
 
         $this->invokeMethod($filterExecutor, 'applyFilter', [$filterMock, $handler]);
-    }
-
-    public function testTransformValues()
-    {
-        $filterExecutor = new FilterExecutor();
-        $filterMock = $this->getCustomAbstractMock(
-            '\Da2e\FiltrationBundle\Filter\Filter\FilterInterface',
-            ['getTransformValuesFunction']
-        );
-        $filterMock->expects($this->never())->method('getTransformValuesFunction');
-
-        $this->invokeMethod($filterExecutor, 'transformValues', [$filterMock]);
-    }
-
-    public function testTransformValues_CustomFunction()
-    {
-        $filterExecutor = new FilterExecutor();
-
-        $filterMock = $this->getFilterMock(['getTransformValuesFunction', 'bar']);
-        $filterMock->expects($this->once())->method('bar');
-        $filterMock->expects($this->atLeastOnce())->method('getTransformValuesFunction')->willReturn(
-            function ($filter) {
-                $filter->bar();
-            }
-        );
-
-        $this->invokeMethod($filterExecutor, 'transformValues', [$filterMock]);
-    }
-
-    public function testTransformValues_CustomFunction_NotCallable()
-    {
-        $filterExecutor = new FilterExecutor();
-
-        $filterMock = $this->getFilterMock(['getTransformValuesFunction']);
-        $filterMock->expects($this->atLeastOnce())->method('getTransformValuesFunction')->willReturn('foobar');
-
-        $this->invokeMethod($filterExecutor, 'transformValues', [$filterMock]);
     }
 
     /**

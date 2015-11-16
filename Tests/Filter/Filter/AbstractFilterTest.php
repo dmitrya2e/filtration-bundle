@@ -285,35 +285,6 @@ class AbstractFilterTest extends AbstractFilterTestCase
         $this->assertSame([], $abstractFilterMock->getFormOptions());
     }
 
-    public function testGetTransformValuesFunction()
-    {
-        $abstractFilterMock = $this->getAbstractFilterMock();
-        $this->assertNull($abstractFilterMock->getTransformValuesFunction());
-    }
-
-    public function testSetTransformValuesFunction()
-    {
-        $abstractFilterMock = $this->getAbstractFilterMock();
-        $function = function (FilterInterface $abstractFilterMock) {
-        };
-
-        $abstractFilterMock->setTransformValuesFunction($function);
-
-        $this->assertSame($function, $abstractFilterMock->getTransformValuesFunction());
-    }
-
-    /**
-     * @expectedException \Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException
-     */
-    public function testSetTransformValuesFunction_InvalidFunction()
-    {
-        $abstractFilterMock = $this->getAbstractFilterMock();
-        $function = function () {
-        };
-
-        $abstractFilterMock->setTransformValuesFunction($function);
-    }
-
     public function testGetHasAppliedValueFunction()
     {
         $abstractFilterMock = $this->getAbstractFilterMock();
@@ -647,30 +618,6 @@ class AbstractFilterTest extends AbstractFilterTestCase
         $mock->setCallableValidatorApplyFilters($validator);
 
         $result = $mock->getCallableValidatorApplyFilters();
-        $this->assertInstanceOf(
-            '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
-            $result
-        );
-    }
-
-    public function testGetCallableValidatorTransformValues()
-    {
-        $mock = $this->getAbstractFilterMock();
-        $result = $mock->getCallableValidatorTransformValues();
-        $this->assertInstanceOf(
-            '\Da2e\FiltrationBundle\CallableFunction\Validator\TransformValuesFunctionValidator',
-            $result
-        );
-    }
-
-    public function testSetCallableValidatorTransformValues()
-    {
-        $validator = new CallableFunctionValidatorMock();
-
-        $mock = $this->getAbstractFilterMock();
-        $mock->setCallableValidatorTransformValues($validator);
-
-        $result = $mock->getCallableValidatorTransformValues();
         $this->assertInstanceOf(
             '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
             $result
