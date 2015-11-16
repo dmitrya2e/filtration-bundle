@@ -13,7 +13,5 @@ class ConvertValueFunctionValidator extends BaseFunctionValidator implements Cal
      */
     protected $argumentTypes = [
         ['type' => 'Da2e\FiltrationBundle\Filter\Filter\FilterInterface'],
-        // raw value
-        ['omit' => true],
     ];
 }

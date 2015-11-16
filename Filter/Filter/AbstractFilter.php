@@ -5,6 +5,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter;
 use Da2e\FiltrationBundle\CallableFunction\Validator\AppendFormFieldsFunctionValidator;
 use Da2e\FiltrationBundle\CallableFunction\Validator\ApplyFiltersFunctionValidator;
 use Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface;
+use Da2e\FiltrationBundle\CallableFunction\Validator\ConvertValueFunctionValidator;
 use Da2e\FiltrationBundle\CallableFunction\Validator\HasAppliedValueFunctionValidator;
 use Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException;
@@ -106,6 +107,14 @@ abstract class AbstractFilter implements
     protected $hasAppliedValueFunction = null;
 
     /**
+     * Custom function for raw value conversion.
+     * Should be the type of "callable".
+     *
+     * @var null|callable Null by default
+     */
+    protected $convertValueFunction = null;
+
+    /**
      * Filter applied raw value (set by form, for example, or manually):
      *  - string
      *  - Collection
@@ -172,6 +181,13 @@ abstract class AbstractFilter implements
      * @var bool|CallableFunctionValidatorInterface|HasAppliedValueFunctionValidator
      */
     protected $callableValidatorHasAppliedValue = false;
+
+    /**
+     * Callable function "convert value" validator.
+     *
+     * @var bool|CallableFunctionValidatorInterface|ConvertValueFunctionValidator
+     */
+    protected $callableValidatorConvertValue = false;
 
     /**
      * @param null|string $name Filter name
@@ -247,6 +263,11 @@ abstract class AbstractFilter implements
                 'empty'  => false,
                 'type'   => 'callable',
             ],
+            'convert_value_function'            => [
+                'setter' => 'setConvertValueFunction',
+                'empty'  => false,
+                'type'   => 'callable',
+            ],
             // Custom callable function validators
             'callable_validator_apply_filter'       => [
                 'setter'      => 'setCallableValidatorApplyFilter',
@@ -262,6 +283,12 @@ abstract class AbstractFilter implements
             ],
             'callable_validator_has_applied_value'  => [
                 'setter'      => 'setCallableValidatorHasAppliedValue',
+                'empty'       => false,
+                'type'        => 'object',
+                'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
+            ],
+            'callable_validator_convert_value'  => [
+                'setter'      => 'setCallableValidatorConvertValue',
                 'empty'       => false,
                 'type'        => 'object',
                 'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
@@ -357,7 +384,7 @@ abstract class AbstractFilter implements
     public function getConvertedValue()
     {
         if ($this->valueHasBeenConverted === false) {
-            $this->convertedValue = $this->convertValue();
+            $this->convertedValue = $this->executeValueConversion();
             $this->valueHasBeenConverted = true;
         }
 
@@ -571,6 +598,41 @@ abstract class AbstractFilter implements
     public function getAppendFormFieldsFunction()
     {
         return $this->appendFormFieldsFunction;
+    }
+
+    /**
+     * Sets custom "convert value" function.
+     *
+     * @param callable $function
+     *
+     * @see ConvertValueFunctionValidator
+     *
+     * @return static
+     * @throws CallableFunctionValidatorException On invalid callable arguments
+     */
+    public function setConvertValueFunction(callable $function)
+    {
+        $validator = $this->getCallableValidatorConvertValue();
+        $validator->setCallableFunction($function);
+
+        if ($validator->isValid() === false) {
+            throw $validator->getException();
+        }
+
+        $this->convertValueFunction = $function;
+
+        return $this;
+    }
+
+    /**
+     * Gets a custom function (lambda) for value conversion. The function must have an input signature with 1 argument:
+     *  - filter object (instance of \Da2e\FiltrationBundle\Filter\Filter\FilterInterface)
+     *
+     * @return null|callable
+     */
+    public function getConvertValueFunction()
+    {
+        return $this->convertValueFunction;
     }
 
     /**
@@ -799,6 +861,35 @@ abstract class AbstractFilter implements
     }
 
     /**
+     * Gets "convert value" callable function validator.
+     *
+     * @return CallableFunctionValidatorInterface|ConvertValueFunctionValidator
+     */
+    public function getCallableValidatorConvertValue()
+    {
+        if ($this->callableValidatorConvertValue === false) {
+            $this->callableValidatorConvertValue = new ConvertValueFunctionValidator();
+        }
+
+        return $this->callableValidatorConvertValue;
+    }
+
+    /**
+     * Sets "convert value" callable function validator.
+     *
+     * @param CallableFunctionValidatorInterface $callableValidatorConvertValue
+     *
+     * @return AbstractFilter
+     */
+    public function setCallableValidatorConvertValue(
+        CallableFunctionValidatorInterface $callableValidatorConvertValue
+    ) {
+        $this->callableValidatorConvertValue = $callableValidatorConvertValue;
+
+        return $this;
+    }
+
+    /**
      * Configures filter (being executed in filter constructor).
      * If something needs to be configured before any work is done, it can be achieved via this method.
      *
@@ -807,5 +898,26 @@ abstract class AbstractFilter implements
     protected function configure()
     {
         return $this;
+    }
+
+    /**
+     * Executes raw value conversion into appropriate form to work with.
+     * If there is a custom function for value conversion, it will be executed.
+     * Otherwise standard abstract convertValue() method will be executed.
+     *
+     * @see AbstractFilter::getConvertValueFunction()
+     * @see AbstractFilter::convertValue()
+     *
+     * @return mixed
+     */
+    protected function executeValueConversion()
+    {
+        $customFunction = $this->getConvertValueFunction();
+
+        if (is_callable($customFunction)) {
+            return call_user_func($customFunction, $this);
+        }
+
+        return $this->convertValue();
     }
 }

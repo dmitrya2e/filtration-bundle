@@ -126,8 +126,8 @@ class AbstractFilterTest extends AbstractFilterTestCase
 
     public function testGetConvertedValue_Converted()
     {
-        $abstractFilterMock = $this->getAbstractFilterMock(['convertValue']);
-        $abstractFilterMock->expects($this->once())->method('convertValue')->willReturn('foobar');
+        $abstractFilterMock = $this->getAbstractFilterMock(['executeValueConversion']);
+        $abstractFilterMock->expects($this->once())->method('executeValueConversion')->willReturn('foobar');
 
         $this->assertSame('foobar', $abstractFilterMock->getConvertedValue());
         $this->assertSame('foobar', $abstractFilterMock->getConvertedValue());
@@ -370,6 +370,35 @@ class AbstractFilterTest extends AbstractFilterTestCase
         };
 
         $abstractFilterMock->setAppendFormFieldsFunction($function);
+    }
+
+    public function testGetConvertValueFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $this->assertNull($abstractFilterMock->getConvertValueFunction());
+    }
+
+    public function testSetConvertValueFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function (FilterInterface $abstractFilterMock) {
+        };
+
+        $abstractFilterMock->setConvertValueFunction($function);
+
+        $this->assertSame($function, $abstractFilterMock->getConvertValueFunction());
+    }
+
+    /**
+     * @expectedException \Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException
+     */
+    public function testSetConvertValueFunction_InvalidFunction()
+    {
+        $abstractFilterMock = $this->getAbstractFilterMock();
+        $function = function () {
+        };
+
+        $abstractFilterMock->setConvertValueFunction($function);
     }
 
     public function testHasForm()
@@ -646,6 +675,50 @@ class AbstractFilterTest extends AbstractFilterTestCase
             '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
             $result
         );
+    }
+
+    public function testGetCallableValidatorConvertValue()
+    {
+        $mock = $this->getAbstractFilterMock();
+        $result = $mock->getCallableValidatorConvertValue();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\ConvertValueFunctionValidator',
+            $result
+        );
+    }
+
+    public function testSetCallableValidatorConvertValue()
+    {
+        $validator = new CallableFunctionValidatorMock();
+
+        $mock = $this->getAbstractFilterMock();
+        $mock->setCallableValidatorConvertValue($validator);
+
+        $result = $mock->getCallableValidatorConvertValue();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\Tests\Filter\Filter\CallableFunctionValidatorMock',
+            $result
+        );
+    }
+
+    public function testExecuteValueConversion()
+    {
+        $mock = $this->getAbstractFilterMock(['convertValue']);
+        $mock->expects($this->atLeastOnce())->method('convertValue')->willReturn('foobar');
+
+        $this->assertSame('foobar', $this->invokeMethod($mock, 'executeValueConversion'));
+    }
+
+    public function testExecuteValueConversion_CustomFunction()
+    {
+        $mock = $this->getAbstractFilterMock(['convertValue']);
+        $mock->expects($this->never())->method('convertValue');
+
+        $mock->setConvertValueFunction(function(FilterInterface $filter) {
+            return 'bar';
+        });
+
+        $this->assertSame('bar', $this->invokeMethod($mock, 'executeValueConversion'));
     }
 
     /**

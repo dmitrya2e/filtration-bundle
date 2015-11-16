@@ -38,46 +38,20 @@ class ConvertRangedValueFunctionValidatorTest extends TestCase
 
         $this->assertSame([
             ['type' => 'Da2e\FiltrationBundle\Filter\Filter\FilterInterface'],
-            ['omit' => true],
-            ['omit' => true],
         ], $result);
     }
 
     public function testIsValid()
     {
-        $functionValidator = new ConvertRangedValueFunctionValidator(function (FilterInterface $filter, $valueFrom, $valueTo) {
+        $functionValidator = new ConvertRangedValueFunctionValidator(function (FilterInterface $filter) {
         });
 
         $this->assertTrue($functionValidator->isValid());
     }
 
-    public function testIsValid_False_FirstArgumentInvalid()
+    public function testIsValid_False()
     {
-        $functionValidator = new ConvertRangedValueFunctionValidator(function (AbstractFilter $filter, $valueFrom, $valueTo) {
-        });
-
-        $this->assertFalse($functionValidator->isValid());
-        $this->assertInstanceOf(
-            '\Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException',
-            $functionValidator->getException()
-        );
-    }
-
-    public function testIsValid_False_NoSecondArgument()
-    {
-        $functionValidator = new ConvertRangedValueFunctionValidator(function (FilterInterface $filter) {
-        });
-
-        $this->assertFalse($functionValidator->isValid());
-        $this->assertInstanceOf(
-            '\Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException',
-            $functionValidator->getException()
-        );
-    }
-
-    public function testIsValid_False_NoThirdArgument()
-    {
-        $functionValidator = new ConvertRangedValueFunctionValidator(function (FilterInterface $filter, $valueFrom) {
+        $functionValidator = new ConvertRangedValueFunctionValidator(function (AbstractFilter $filter) {
         });
 
         $this->assertFalse($functionValidator->isValid());

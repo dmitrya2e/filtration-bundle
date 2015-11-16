@@ -38,33 +38,20 @@ class ConvertValueFunctionValidatorTest extends TestCase
 
         $this->assertSame([
             ['type' => 'Da2e\FiltrationBundle\Filter\Filter\FilterInterface'],
-            ['omit' => true],
         ], $result);
     }
 
     public function testIsValid()
     {
-        $functionValidator = new ConvertValueFunctionValidator(function (FilterInterface $filter, $value) {
+        $functionValidator = new ConvertValueFunctionValidator(function (FilterInterface $filter) {
         });
 
         $this->assertTrue($functionValidator->isValid());
     }
 
-    public function testIsValid_False_FirstArgumentInvalid()
+    public function testIsValid_False()
     {
-        $functionValidator = new ConvertValueFunctionValidator(function (AbstractFilter $filter, $value) {
-        });
-
-        $this->assertFalse($functionValidator->isValid());
-        $this->assertInstanceOf(
-            '\Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException',
-            $functionValidator->getException()
-        );
-    }
-
-    public function testIsValid_False_NoSecondArgument()
-    {
-        $functionValidator = new ConvertValueFunctionValidator(function (FilterInterface $filter) {
+        $functionValidator = new ConvertValueFunctionValidator(function (AbstractFilter $filter) {
         });
 
         $this->assertFalse($functionValidator->isValid());

@@ -13,9 +13,5 @@ class ConvertRangedValueFunctionValidator extends BaseFunctionValidator implemen
      */
     protected $argumentTypes = [
         ['type' => 'Da2e\FiltrationBundle\Filter\Filter\FilterInterface'],
-        // raw value "from"
-        ['omit' => true],
-        // raw value "to"
-        ['omit' => true],
     ];
 }

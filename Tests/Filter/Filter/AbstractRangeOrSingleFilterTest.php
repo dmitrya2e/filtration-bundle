@@ -206,10 +206,30 @@ class AbstractRangeOrSingleFilterTest extends AbstractFilterTestCase
         $this->assertNull($abstractRangeOrSingleFilterMock->getConvertedFromValue());
     }
 
+    public function testGetConvertedToValue_Converted()
+    {
+        $abstractRangeOrSingleFilterMock = $this->getAbstractRangeOrSingleFilterMock(['executeValueConversion']);
+        $abstractRangeOrSingleFilterMock->expects($this->once())->method('executeValueConversion')->willReturn(['foo', 'bar']);
+
+        $this->assertSame('bar', $abstractRangeOrSingleFilterMock->getConvertedToValue());
+        $this->assertSame('bar', $abstractRangeOrSingleFilterMock->getConvertedToValue());
+        $this->assertSame('foo', $abstractRangeOrSingleFilterMock->getConvertedFromValue());
+    }
+
     public function testGetConvertedFromValue()
     {
         $abstractRangeOrSingleFilterMock = $this->getAbstractRangeOrSingleFilterMock();
         $this->assertNull($abstractRangeOrSingleFilterMock->getConvertedToValue());
+    }
+
+    public function testGetConvertedFromValue_Converted()
+    {
+        $abstractRangeOrSingleFilterMock = $this->getAbstractRangeOrSingleFilterMock(['executeValueConversion']);
+        $abstractRangeOrSingleFilterMock->expects($this->once())->method('executeValueConversion')->willReturn(['foo', 'bar']);
+
+        $this->assertSame('foo', $abstractRangeOrSingleFilterMock->getConvertedFromValue());
+        $this->assertSame('foo', $abstractRangeOrSingleFilterMock->getConvertedFromValue());
+        $this->assertSame('bar', $abstractRangeOrSingleFilterMock->getConvertedToValue());
     }
 
     public function testIsSingle()
@@ -708,6 +728,16 @@ class AbstractRangeOrSingleFilterTest extends AbstractFilterTestCase
         }
 
         $this->assertEquals(count($args), $exceptionCount);
+    }
+
+    public function testGetCallableValidatorConvertValue()
+    {
+        $mock = $this->getAbstractRangeOrSingleFilterMock();
+        $result = $mock->getCallableValidatorConvertValue();
+        $this->assertInstanceOf(
+            '\Da2e\FiltrationBundle\CallableFunction\Validator\ConvertRangedValueFunctionValidator',
+            $result
+        );
     }
 
     /**
