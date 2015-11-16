@@ -2,6 +2,7 @@
 
 namespace Da2e\FiltrationBundle\Filter\Filter;
 
+use Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
 
 /**
@@ -293,13 +294,21 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
 
     /**
      * {@inheritDoc}
+     *
+     * @throws FilterException On invalid custom function returned value
      */
     public function hasAppliedValue()
     {
         $customFunction = $this->getHasAppliedValueFunction();
 
         if (is_callable($customFunction)) {
-            return call_user_func($customFunction, $this);
+            $result = call_user_func($customFunction, $this);
+
+            if (!is_bool($result)) {
+                throw new FilterException('Returned value from callable function must be boolean.');
+            }
+
+            return $result;
         }
 
         if ($this->isSingle() === false) {

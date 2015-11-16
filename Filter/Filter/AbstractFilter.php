@@ -342,13 +342,21 @@ abstract class AbstractFilter implements
      * @see AbstractFilter::getHasAppliedValueFunction() for custom function for checking if the filter value is applied
      *
      * @return bool
+     *
+     * @throws FilterException On invalid custom function returned value
      */
     public function hasAppliedValue()
     {
         $customFunction = $this->getHasAppliedValueFunction();
 
         if (is_callable($customFunction)) {
-            return call_user_func($customFunction, $this);
+            $result = call_user_func($customFunction, $this);
+
+            if (!is_bool($result)) {
+                throw new FilterException('Returned value from callable function must be boolean.');
+            }
+
+            return $result;
         }
 
         $convertedValue = $this->getConvertedValue();
