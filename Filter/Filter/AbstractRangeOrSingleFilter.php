@@ -296,6 +296,12 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
      */
     public function hasAppliedValue()
     {
+        $customFunction = $this->getHasAppliedValueFunction();
+
+        if (is_callable($customFunction)) {
+            return call_user_func($customFunction, $this);
+        }
+
         if ($this->isSingle() === false) {
             return $this->getConvertedFromValue() !== null || $this->getConvertedToValue() !== null;
         }

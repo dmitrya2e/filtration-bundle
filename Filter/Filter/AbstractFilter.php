@@ -5,6 +5,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter;
 use Da2e\FiltrationBundle\CallableFunction\Validator\AppendFormFieldsFunctionValidator;
 use Da2e\FiltrationBundle\CallableFunction\Validator\ApplyFiltersFunctionValidator;
 use Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface;
+use Da2e\FiltrationBundle\CallableFunction\Validator\HasAppliedValueFunctionValidator;
 use Da2e\FiltrationBundle\CallableFunction\Validator\TransformValuesFunctionValidator;
 use Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException;
@@ -107,6 +108,14 @@ abstract class AbstractFilter implements
     protected $transformValuesFunction = null;
 
     /**
+     * Custom function for checking if the filter has been applied.
+     * Should be the type of "callable".
+     *
+     * @var null|callable Null by default
+     */
+    protected $hasAppliedValueFunction = null;
+
+    /**
      * Filter applied raw value (set by form, for example, or manually):
      *  - string
      *  - Collection
@@ -154,19 +163,32 @@ abstract class AbstractFilter implements
     protected $valuePropertyName = 'value';
 
     /**
+     * Callable function "transform values" validator.
+     *
      * @var bool|CallableFunctionValidatorInterface|TransformValuesFunctionValidator
      */
     protected $callableValidatorTransformValues = false;
 
     /**
+     * Callable function "append form fields" validator.
+     *
      * @var bool|CallableFunctionValidatorInterface|ApplyFiltersFunctionValidator
      */
     protected $callableValidatorAppendFormFields = false;
 
     /**
+     * Callable function "apply filters" validator.
+     *
      * @var bool|CallableFunctionValidatorInterface|ApplyFiltersFunctionValidator
      */
     protected $callableValidatorApplyFilters = false;
+
+    /**
+     * Callable function "has applied values" validator.
+     *
+     * @var bool|CallableFunctionValidatorInterface|HasAppliedValueFunctionValidator
+     */
+    protected $callableValidatorHasAppliedValue = false;
 
     /**
      * @param null|string $name Filter name
@@ -242,6 +264,11 @@ abstract class AbstractFilter implements
                 'empty'  => false,
                 'type'   => 'callable',
             ],
+            'has_applied_value_function'            => [
+                'setter' => 'setHasAppliedValueFunction',
+                'empty'  => false,
+                'type'   => 'callable',
+            ],
             // Custom callable function validators
             'callable_validator_apply_filter'       => [
                 'setter'      => 'setCallableValidatorApplyFilter',
@@ -257,6 +284,12 @@ abstract class AbstractFilter implements
             ],
             'callable_validator_transform_values'   => [
                 'setter'      => 'setCallableValidatorTransformValues',
+                'empty'       => false,
+                'type'        => 'object',
+                'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
+            ],
+            'callable_validator_has_applied_value'  => [
+                'setter'      => 'setCallableValidatorHasAppliedValue',
                 'empty'       => false,
                 'type'        => 'object',
                 'instance_of' => '\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface',
@@ -301,11 +334,23 @@ abstract class AbstractFilter implements
      * Checks if the filter value was applied.
      * Note, that the converted value is used in checking.
      *
+     * If there is a custom function for checking if the filter value is applied,
+     * it will be executed instead of default checking.
+     * Note, that custom function must return boolean result of checking if the filter value has been applied.
+     *
      * @see AbstractFilter::getConvertedValue()
+     * @see AbstractFilter::getHasAppliedValueFunction() for custom function for checking if the filter value is applied
+     *
      * @return bool
      */
     public function hasAppliedValue()
     {
+        $customFunction = $this->getHasAppliedValueFunction();
+
+        if (is_callable($customFunction)) {
+            return call_user_func($customFunction, $this);
+        }
+
         $convertedValue = $this->getConvertedValue();
 
         if (is_array($convertedValue)) {
@@ -477,6 +522,41 @@ abstract class AbstractFilter implements
     public function getTransformValuesFunction()
     {
         return $this->transformValuesFunction;
+    }
+
+    /**
+     * Sets custom "has applied value" function.
+     * The function must return boolean result (result of checking if the filter value has been applied).
+     *
+     * @param callable $function
+     *
+     * @see HasAppliedValueFunctionValidator
+     *
+     * @return static
+     * @throws CallableFunctionValidatorException On invalid callable arguments
+     */
+    public function setHasAppliedValueFunction(callable $function)
+    {
+        $validator = $this->getCallableValidatorHasAppliedValue();
+        $validator->setCallableFunction($function);
+
+        if ($validator->isValid() === false) {
+            throw $validator->getException();
+        }
+
+        $this->hasAppliedValueFunction = $function;
+
+        return $this;
+    }
+
+    /**
+     * Gets a custom function (lambda) for checking if the filter was applied.
+     *
+     * @return null|callable
+     */
+    public function getHasAppliedValueFunction()
+    {
+        return $this->hasAppliedValueFunction;
     }
 
     /**
@@ -768,6 +848,35 @@ abstract class AbstractFilter implements
     public function setCallableValidatorApplyFilters(CallableFunctionValidatorInterface $callableValidatorApplyFilters)
     {
         $this->callableValidatorApplyFilters = $callableValidatorApplyFilters;
+
+        return $this;
+    }
+
+    /**
+     * Gets "has applied value" callable function validator.
+     *
+     * @return CallableFunctionValidatorInterface|HasAppliedValueFunctionValidator
+     */
+    public function getCallableValidatorHasAppliedValue()
+    {
+        if ($this->callableValidatorHasAppliedValue === false) {
+            $this->callableValidatorHasAppliedValue = new HasAppliedValueFunctionValidator();
+        }
+
+        return $this->callableValidatorHasAppliedValue;
+    }
+
+    /**
+     * Sets "has applied value" callable function validator.
+     *
+     * @param CallableFunctionValidatorInterface $callableValidatorHasAppliedValue
+     *
+     * @return AbstractFilter
+     */
+    public function setCallableValidatorHasAppliedValue(
+        CallableFunctionValidatorInterface $callableValidatorHasAppliedValue
+    ) {
+        $this->callableValidatorHasAppliedValue = $callableValidatorHasAppliedValue;
 
         return $this;
     }
