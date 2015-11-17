@@ -16,6 +16,36 @@ class NumberFilterTest extends SphinxAPIFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(NumberFilter::getValidOptions()));
+        $this->assertSame(
+            array_merge($this->getAbstractRangeOrSingleFilterValidOptions(), [
+                'float' => [
+                    'setter' => 'setFloat',
+                    'empty'  => false,
+                    'type'   => 'bool',
+                ],
+                'exclude'            => [
+                    'setter' => 'setExclude',
+                    'empty'  => false,
+                    'type'   => 'bool',
+                ],
+                'default_min'        => [
+                    'setter' => 'setDefaultMin',
+                    'empty'  => false,
+                    'type'   => ['int', 'float'],
+                ],
+                'default_max'        => [
+                    'setter' => 'setDefaultMax',
+                    'empty'  => false,
+                    'type'   => ['int', 'float'],
+                ],
+                'default_float_step' => [
+                    'setter' => 'setDefaultFloatStep',
+                    'empty'  => false,
+                    'type'   => 'float',
+                ],
+            ]),
+            NumberFilter::getValidOptions()
+        );
     }
 
     public function testDefaultMinProperty()

@@ -14,6 +14,16 @@ class ChoiceFilterTest extends AbstractFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(ChoiceFilter::getValidOptions()));
+        $this->assertSame(
+            array_merge($this->getAbstractFilterValidOptions(), [
+                'exclude' => [
+                    'setter' => 'setExclude',
+                    'empty'  => false,
+                    'type'   => 'bool',
+                ],
+            ]),
+            ChoiceFilter::getValidOptions()
+        );
     }
 
     public function testApplyFilter()

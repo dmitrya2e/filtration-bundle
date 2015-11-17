@@ -58,6 +58,16 @@ class AbstractNumberFilterTest extends AbstractFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(AbstractNumberFilter::getValidOptions()));
+        $this->assertSame(
+            array_merge($this->getAbstractRangeOrSingleFilterValidOptions(), [
+                'float' => [
+                    'setter' => 'setFloat',
+                    'empty'  => false,
+                    'type'   => 'bool',
+                ],
+            ]),
+            AbstractNumberFilter::getValidOptions()
+        );
     }
 
     public function testAppendFormOptions()

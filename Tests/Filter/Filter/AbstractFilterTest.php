@@ -37,6 +37,7 @@ class AbstractFilterTest extends AbstractFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(AbstractFilter::getValidOptions()));
+        $this->assertSame($this->getAbstractFilterValidOptions(), AbstractFilter::getValidOptions());
     }
 
     /**

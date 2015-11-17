@@ -61,6 +61,16 @@ class TextFilterTest extends DoctrineORMFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(TextFilter::getValidOptions()));
+        $this->assertSame(
+            array_merge($this->getAbstractFilterValidOptions(), [
+                'match_type' => [
+                    'setter' => 'setMatchType',
+                    'empty'  => false,
+                    'type'   => 'string',
+                ],
+            ]),
+            TextFilter::getValidOptions()
+        );
     }
 
     public function testSetMatchType()

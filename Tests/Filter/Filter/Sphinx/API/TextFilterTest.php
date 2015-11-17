@@ -14,6 +14,7 @@ class TextFilterTest extends AbstractFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(TextFilter::getValidOptions()));
+        $this->assertSame($this->getAbstractFilterValidOptions(), TextFilter::getValidOptions());
     }
 
     public function testApplyFilter()

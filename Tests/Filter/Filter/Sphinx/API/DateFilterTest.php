@@ -15,6 +15,28 @@ class DateFilterTest extends SphinxAPIFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(DateFilter::getValidOptions()));
+        $this->assertSame(
+            array_merge($this->getAbstractRangeOrSingleFilterValidOptions(), [
+                'exclude' => [
+                    'setter' => 'setExclude',
+                    'empty'  => false,
+                    'type'   => 'bool',
+                ],
+                'default_min' => [
+                    'setter'      => 'setDefaultMin',
+                    'empty'       => false,
+                    'type'        => 'object',
+                    'instance_of' => '\DateTime',
+                ],
+                'default_max' => [
+                    'setter'      => 'setDefaultMax',
+                    'empty'       => false,
+                    'type'        => 'object',
+                    'instance_of' => '\DateTime',
+                ],
+            ]),
+            DateFilter::getValidOptions()
+        );
     }
 
     public function testDefaultMinProperty()

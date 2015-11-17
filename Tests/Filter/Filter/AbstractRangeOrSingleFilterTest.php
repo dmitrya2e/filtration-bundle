@@ -37,6 +37,7 @@ class AbstractRangeOrSingleFilterTest extends AbstractFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(AbstractRangeOrSingleFilter::getValidOptions()));
+        $this->assertSame($this->getAbstractRangeOrSingleFilterValidOptions(), AbstractRangeOrSingleFilter::getValidOptions());
     }
 
     public function testHasAppliedValue()

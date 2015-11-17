@@ -17,16 +17,6 @@ class TextFilter extends AbstractTextFilter
 
     /**
      * {@inheritDoc}
-     */
-    public static function getValidOptions()
-    {
-        return array_merge(parent::getValidOptions(), [
-            'exclude' => self::getExcludeOptionDescription(),
-        ]);
-    }
-
-    /**
-     * {@inheritDoc}
      *
      * @param \SphinxClient $sphinxClient
      */

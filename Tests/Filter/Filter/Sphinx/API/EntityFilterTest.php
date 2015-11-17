@@ -14,6 +14,16 @@ class EntityFilterTest extends AbstractFilterTestCase
     public function testGetValidOptions()
     {
         $this->assertTrue(is_array(EntityFilter::getValidOptions()));
+        $this->assertSame(
+            array_merge($this->getAbstractFilterValidOptions(), [
+                'exclude' => [
+                    'setter' => 'setExclude',
+                    'empty'  => false,
+                    'type'   => 'bool',
+                ],
+            ]),
+            EntityFilter::getValidOptions()
+        );
     }
 
     public function testApplyFilter()
