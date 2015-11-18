@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\Filter\Filter;
 
 use Da2e\FiltrationBundle\CallableFunction\Validator\AppendFormFieldsFunctionValidator;
@@ -23,7 +32,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  * However, if you find that it takes too much functions, which you do not actually need,
  * you are free to not use it and the only thing that is essentially important, is to implement FilterInterface.
  *
- * @package Da2e\FiltrationBundle\Filter\Filter
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  * @abstract
  */
 abstract class AbstractFilter implements

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\Filter\Collection;
 
 use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
@@ -7,7 +16,7 @@ use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
 /**
  * A base filter collection class with base methods.
  *
- * @package Da2e\FiltrationBundle\Filter\Collection
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 class BaseCollection implements \IteratorAggregate, \Countable
 {

@@ -1,12 +1,21 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\Filter\Filter;
 
 /**
  * An interface, which can be used by filter to indicate if it has a custom function for applying filtration.
  * The interface must be used in coupe with FilterInterface.
  *
- * @package Da2e\FiltrationBundle\Filter\Filter
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 interface CustomApplyFilterInterface
 {

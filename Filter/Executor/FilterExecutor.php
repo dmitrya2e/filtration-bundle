@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\Filter\Executor;
 
 use Da2e\FiltrationBundle\Exception\Filter\Executor\FilterExecutorException;
@@ -11,7 +20,7 @@ use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
  * The default filter executor class.
  * Used for executing the applied filters.
  *
- * @package Da2e\FiltrationBundle\Filter\Executor
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 class FilterExecutor implements FilterExecutorInterface
 {
@@ -107,7 +116,7 @@ class FilterExecutor implements FilterExecutorInterface
      *
      * @param array|object[]|mixed[] $handlers
      *
-     * @return $this
+     * @return static
      */
     public function registerHandlers(array $handlers)
     {
