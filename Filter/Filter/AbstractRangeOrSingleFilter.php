@@ -17,7 +17,7 @@ use Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
 
 /**
- * A base abstract "range or single" filter class.
+ * Base abstract "range or single" filter class.
  * This class is useful for filters, which can act either as "single" filter or "ranged" filter. For example:
  *  - number filter can execute filtration by exact number (single ("WHERE `field` = $value"))
  *  - number filter can execute filtration by range of two numbers (ranged ("WHERE `field` > $min AND `field` < $max"))
@@ -330,7 +330,7 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
-     * Sets the raw value for the "from" field for the ranged mode.
+     * Sets the raw value for the "from" field in the ranged mode.
      *
      * @param mixed $fromValue
      *
@@ -354,7 +354,7 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
-     * Sets the raw value for the "to" field for the ranged mode.
+     * Sets the raw value for the "to" field in the ranged mode.
      *
      * @param mixed $toValue
      *
@@ -378,6 +378,9 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets converted "from" value (for the ranged mode).
+     * If the value was not yet converted, than AbstractFilter::executeValueConversion() will be executed.
+     *
      * @return mixed|null
      */
     public function getConvertedFromValue()
@@ -395,6 +398,9 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets converted "to" value (for the ranged mode).
+     * If the value was not yet converted, than AbstractFilter::executeValueConversion() will be executed.
+     *
      * @return mixed|null
      */
     public function getConvertedToValue()
@@ -412,9 +418,11 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
-     * @param boolean $single
+     * Defines if the filter must be treated as single or ranged.
      *
-     * @return AbstractRangeOrSingleFilter
+     * @param bool $single True for single treatment
+     *
+     * @return static
      * @throws InvalidArgumentException On invalid argument
      */
     public function setSingle($single)
@@ -429,6 +437,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Checks if the filter is treated as single.
+     *
      * @return boolean
      */
     public function isSingle()
@@ -437,9 +447,11 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
-     * @param string $singleType
+     * Sets type for the filter treated as single.
      *
-     * @return AbstractRangeOrSingleFilter
+     * @param string $singleType AbstractRangeOrSingleFilter::SINGLE_TYPE_*
+     *
+     * @return static
      * @throws InvalidArgumentException On invalid argument
      */
     public function setSingleType($singleType)
@@ -464,6 +476,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets type for the filter treated as single.
+     *
      * @return string
      */
     public function getSingleType()
@@ -472,9 +486,11 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Sets "from" value property name, which contains the "from" value.
+     *
      * @param string $fromValuePropertyName
      *
-     * @return AbstractRangeOrSingleFilter
+     * @return static
      * @throws InvalidArgumentException On invalid argument
      */
     public function setFromValuePropertyName($fromValuePropertyName)
@@ -493,6 +509,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets "from" value property name, which contains the "from" value.
+     *
      * @return string
      */
     public function getFromValuePropertyName()
@@ -501,9 +519,11 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Sets "to" value property name, which contains the "to" value.
+     *
      * @param string $toValuePropertyName
      *
-     * @return AbstractRangeOrSingleFilter
+     * @return static
      * @throws InvalidArgumentException On invalid argument
      */
     public function setToValuePropertyName($toValuePropertyName)
@@ -522,6 +542,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets "to" value property name, which contains the "to" value.
+     *
      * @return string
      */
     public function getToValuePropertyName()
@@ -530,6 +552,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Sets "from" name postfix.
+     *
      * @param string $fromPostfix
      *
      * @return static
@@ -547,6 +571,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets "from" name postfix.
+     *
      * @return string
      */
     public function getFromPostfix()
@@ -555,6 +581,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Sets "to" name postfix.
+     *
      * @param string $toPostfix
      *
      * @return static
@@ -572,6 +600,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets "to" name postfix.
+     *
      * @return string
      */
     public function getToPostfix()
@@ -580,6 +610,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets "from" type for the filter treated as ranged.
+     *
      * @return string
      */
     public function getRangedFromType()
@@ -588,9 +620,11 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
-     * @param string $rangedFromType
+     * Sets "from" type for the filter treated as ranged.
      *
-     * @return AbstractRangeOrSingleFilter
+     * @param string $rangedFromType AbstractRangeOrSingleFilter::RANGED_FROM_TYPE_*
+     *
+     * @return static
      * @throws InvalidArgumentException On invalid argument
      */
     public function setRangedFromType($rangedFromType)
@@ -609,6 +643,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets "to" type for the filter treated as ranged.
+     *
      * @return string
      */
     public function getRangedToType()
@@ -617,9 +653,11 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
-     * @param string $rangedToType
+     * Sets "to" type for the filter treated as ranged.
      *
-     * @return AbstractRangeOrSingleFilter
+     * @param string $rangedToType AbstractRangeOrSingleFilter::RANGED_TO_TYPE_*
+     *
+     * @return static
      * @throws InvalidArgumentException On invalid argument
      */
     public function setRangedToType($rangedToType)
@@ -638,6 +676,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets form field type for "from" field.
+     *
      * @return string
      */
     public function getFormFieldTypeRangedFrom()
@@ -646,9 +686,11 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Sets form field type for "from" field.
+     *
      * @param string $formFieldTypeRangedFrom
      *
-     * @return AbstractDateFilter
+     * @return static
      * @throws InvalidArgumentException On invalid argument
      */
     public function setFormFieldTypeRangedFrom($formFieldTypeRangedFrom)
@@ -663,6 +705,8 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Gets form field type for "to" field.
+     *
      * @return string
      */
     public function getFormFieldTypeRangedTo()
@@ -671,9 +715,11 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
     }
 
     /**
+     * Sets form field type for "to" field.
+     *
      * @param string $formFieldTypeRangedTo
      *
-     * @return AbstractDateFilter
+     * @return static
      * @throws InvalidArgumentException On invalid argument
      */
     public function setFormFieldTypeRangedTo($formFieldTypeRangedTo)

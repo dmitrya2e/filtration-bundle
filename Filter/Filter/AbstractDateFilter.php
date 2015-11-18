@@ -14,7 +14,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class AbstractDateFilter
+ * Base abstract date filter, which may be extended by all concrete date filters.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  * @abstract
@@ -27,14 +27,14 @@ abstract class AbstractDateFilter extends AbstractRangeOrSingleFilter
     protected $formFieldType = 'date';
 
     /**
-     * Form field type name for the "from" field for the ranged mode.
+     * Form field type name for the "from" field in the ranged mode.
      *
      * @var string
      */
     protected $formFieldTypeRangedFrom = 'date';
 
     /**
-     * Form field type name for the "to" field for the ranged mode.
+     * Form field type name for the "to" field in the ranged mode.
      *
      * @var string
      */
@@ -53,11 +53,11 @@ abstract class AbstractDateFilter extends AbstractRangeOrSingleFilter
     }
 
     /**
-     * Applies exact date form fields.
+     * Applies single date form fields.
      *
      * @var FormBuilderInterface $formBuilder
      *
-     * @return $this
+     * @return static
      */
     protected function appendSingleFormFields(FormBuilderInterface $formBuilder)
     {
@@ -84,11 +84,11 @@ abstract class AbstractDateFilter extends AbstractRangeOrSingleFilter
     }
 
     /**
-     * Applies ranged date form fields.
+     * Appends ranged date form fields.
      *
      * @var FormBuilderInterface $formBuilder
      *
-     * @return $this
+     * @return static
      */
     protected function appendRangedFormFields(FormBuilderInterface $formBuilder)
     {
@@ -158,11 +158,11 @@ abstract class AbstractDateFilter extends AbstractRangeOrSingleFilter
     }
 
     /**
-     * Gets \DateTime object value or null if the filter was not applied.
+     * Gets \DateTime object value if the filter was applied or null if the filter was not applied.
      *
      * @param \DateTime|null $value
      *
-     * @return null|\DateTime
+     * @return null|\DateTime DateTime object without time
      */
     private function getDateTimeObjectValueOrNull($value)
     {

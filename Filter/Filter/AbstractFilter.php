@@ -22,15 +22,15 @@ use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * A base abstract class with maximum functionality for bundles all default filters.
+ * Base abstract class with maximum functionality for bundles all default filters.
  * The class has all possible capabilities:
  *  - option setting
  *  - form representation
  *  - custom callable functions
  *
- * If you want to make your own custom filter, for convenience you can extend this class.
+ * If you want to make your own custom filter, you can extend this class for convenience.
  * However, if you find that it takes too much functions, which you do not actually need,
- * you are free to not use it and the only thing that is essentially important, is to implement FilterInterface.
+ * you are free to not use it and the only thing that is essentially important **is to implement FilterInterface**.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  * @abstract
@@ -131,22 +131,22 @@ abstract class AbstractFilter implements
      *  - etc
      *
      * The value type depends on specific Filter.
-     * **This value must not be used for filtration. See AbstractFilter::$convertedValue.**
+     * **This value must not be used for filtration. Use AbstractFilter::getConvertedValue() method instead.**
      *
-     * @see AbstractFilter::$convertedValue
+     * @see AbstractFilter::getConvertedValue()
      * @var mixed|null Null by default
      */
     protected $value = null;
 
     /**
-     * The default value for the filter (used in form "data" key as well).
+     * The default value for the filter, which is used as value for a forms "data" key.
      *
      * @var mixed|null Null by default
      */
     protected $defaultValue = null;
 
     /**
-     * The value which is converted by raw value.
+     * The value which is converted from raw value.
      * This is the "clean" and workable form of value, which must be used for filtration.
      *
      * The value is being converted while executing method AbstractFilter::convertValue().
@@ -340,7 +340,7 @@ abstract class AbstractFilter implements
 
     /**
      * Checks if the filter value was applied.
-     * Note, that the converted value is used in checking.
+     * Note, that the converted value is used for checking.
      *
      * If there is a custom function for checking if the filter value is applied,
      * it will be executed instead of default checking.
@@ -377,7 +377,7 @@ abstract class AbstractFilter implements
             return $convertedValue !== '';
         }
 
-        // Default fallback to empty() function.
+        // Fallback to empty() function by default.
         // If the value is int/float and it is equal to 0, it will be considered that the value has not been applied.
         // To change this behaviour, please override this method.
         return !empty($convertedValue);
@@ -385,9 +385,9 @@ abstract class AbstractFilter implements
 
     /**
      * Gets the converted value for specific filter.
-     * If the values has not been converted yet, the AbstractFilter::convertValue() method will be executed.
+     * If the values has not been converted yet, the AbstractFilter::executeValueConversion() method will be executed.
      *
-     * @see AbstractFilter::convertValue()
+     * @see AbstractFilter::executeValueConversion()
      * @return mixed
      */
     public function getConvertedValue()
@@ -802,7 +802,7 @@ abstract class AbstractFilter implements
      *
      * @param CallableFunctionValidatorInterface $callableValidatorAppendFormFields
      *
-     * @return AbstractFilter
+     * @return static
      */
     public function setCallableValidatorAppendFormFields(
         CallableFunctionValidatorInterface $callableValidatorAppendFormFields
@@ -831,7 +831,7 @@ abstract class AbstractFilter implements
      *
      * @param CallableFunctionValidatorInterface $callableValidatorApplyFilters
      *
-     * @return AbstractFilter
+     * @return static
      */
     public function setCallableValidatorApplyFilters(CallableFunctionValidatorInterface $callableValidatorApplyFilters)
     {
@@ -859,7 +859,7 @@ abstract class AbstractFilter implements
      *
      * @param CallableFunctionValidatorInterface $callableValidatorHasAppliedValue
      *
-     * @return AbstractFilter
+     * @return static
      */
     public function setCallableValidatorHasAppliedValue(
         CallableFunctionValidatorInterface $callableValidatorHasAppliedValue
@@ -888,7 +888,7 @@ abstract class AbstractFilter implements
      *
      * @param CallableFunctionValidatorInterface $callableValidatorConvertValue
      *
-     * @return AbstractFilter
+     * @return static
      */
     public function setCallableValidatorConvertValue(
         CallableFunctionValidatorInterface $callableValidatorConvertValue
@@ -902,7 +902,7 @@ abstract class AbstractFilter implements
      * Configures filter (being executed in filter constructor).
      * If something needs to be configured before any work is done, it can be achieved via this method.
      *
-     * @return $this
+     * @return static
      */
     protected function configure()
     {

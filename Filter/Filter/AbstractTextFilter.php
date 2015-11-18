@@ -14,7 +14,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * A base abstract text filter class.
+ * Base abstract text filter class, which may be extended by all concrete text filters.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  * @abstract
@@ -44,6 +44,8 @@ abstract class AbstractTextFilter extends AbstractFilter
 
     /**
      * {@inheritDoc}
+     *
+     * Casts value to string. If the value is not scalar, an empty string will be returned.
      *
      * @return string
      */

@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class AbstractEntityFilter
+ * Base abstract entity filter, which may be extended by all concrete entity filters.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  * @abstract
@@ -48,7 +48,11 @@ abstract class AbstractEntityFilter extends AbstractFilter
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
+     *
+     * Converts value into an array with integers.
+     *
+     * @return array|int[]
      */
     protected function convertValue()
     {

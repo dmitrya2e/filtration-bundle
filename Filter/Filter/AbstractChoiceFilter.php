@@ -14,7 +14,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * A base abstract choice filter class.
+ * Base abstract choice filter, which may be extended by all concrete choice filters.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  * @abstract
@@ -50,7 +50,9 @@ abstract class AbstractChoiceFilter extends AbstractFilter
     /**
      * {@inheritDoc}
      *
-     * @return array
+     * Converts value into an array with integers.
+     *
+     * @return array|int[]
      */
     protected function convertValue()
     {

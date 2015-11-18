@@ -15,7 +15,7 @@ use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class AbstractNumberFilter
+ * Base abstract number filter, which may be extended by all concrete number filters.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  * @abstract
@@ -44,7 +44,7 @@ abstract class AbstractNumberFilter extends AbstractRangeOrSingleFilter
     /**
      * Treat values like floats or integers.
      *
-     * @var bool
+     * @var bool Float by default, which stands for integers
      */
     protected $float = false;
 
@@ -75,6 +75,8 @@ abstract class AbstractNumberFilter extends AbstractRangeOrSingleFilter
     }
 
     /**
+     * Checks if the filter values must be treated as float numbers.
+     *
      * @return boolean
      */
     public function isFloat()
@@ -83,7 +85,7 @@ abstract class AbstractNumberFilter extends AbstractRangeOrSingleFilter
     }
 
     /**
-     * Sets Float.
+     * Defines if the filter values must be treated as float numbers.
      *
      * @param boolean $float
      *
@@ -125,11 +127,11 @@ abstract class AbstractNumberFilter extends AbstractRangeOrSingleFilter
     }
 
     /**
-     * Appends form fields for "exact" mode.
+     * Appends form fields for "single" mode.
      *
      * @param FormBuilderInterface $formBuilder
      *
-     * @return $this
+     * @return static
      */
     protected function appendSingleFormFields(FormBuilderInterface $formBuilder)
     {
@@ -158,7 +160,7 @@ abstract class AbstractNumberFilter extends AbstractRangeOrSingleFilter
      *
      * @param FormBuilderInterface $formBuilder
      *
-     * @return $this
+     * @return static
      */
     protected function appendRangedFormFields(FormBuilderInterface $formBuilder)
     {
