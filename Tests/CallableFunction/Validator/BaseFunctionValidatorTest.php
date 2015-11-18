@@ -49,8 +49,7 @@ class BaseFunctionValidatorTest extends TestCase
         $baseFunctionValidator = new BaseFunctionValidator(function (
             \stdClass $object,
             array $array,
-            $noTypeHint,
-            $omit
+            $noTypeHint
         ) {
         });
 
@@ -58,7 +57,6 @@ class BaseFunctionValidatorTest extends TestCase
             ['type' => 'stdClass'],
             ['type' => null, 'array' => true],
             ['type' => null],
-            ['omit' => true],
         ]);
 
         $this->invokeMethod($baseFunctionValidator, 'doValidate');
@@ -73,8 +71,8 @@ class BaseFunctionValidatorTest extends TestCase
         });
 
         $this->setPrivatePropertyValue($baseFunctionValidator, 'argumentTypes', [
-            ['omit' => true],
-            ['omit' => true],
+            ['type' => null],
+            ['type' => null],
         ]);
 
         $this->invokeMethod($baseFunctionValidator, 'doValidate');

@@ -1,12 +1,23 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\CallableFunction\Validator;
 
 use Da2e\FiltrationBundle\Exception\CallableFunction\Validator\CallableFunctionValidatorException;
 
 /**
- * Class BaseFunctionValidator
- * @package Da2e\FiltrationBundle\CallableFunction\Validator
+ * Base callable function validator, which has all "core" functionality for validating callable functions.
+ * Tis class should be extended by all concrete validators.
+ *
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>s
  */
 class BaseFunctionValidator
 {
@@ -14,14 +25,13 @@ class BaseFunctionValidator
      * Allowed argument type names in callable function.
      * It must consist of array with the following structure:
      *  array(
-     *      0 => array('type' => 'Fully\Qualified\Name', 'omit' => bool),
-     *      1 => array('type' => null, 'omit' => true/false, 'array' => bool),
+     *      0 => array('type' => 'Fully\Qualified\Name'),
+     *      1 => array('type' => null, 'array' => true),
      *      n => ...,
      *  );
      *
      * Key "type" defines the FQN of the class or NULL, if the argument is passed without type hinting.
-     * Key "omit" defines if the validator should validate the argument or not.
-     * Key "array" defines if the argument must be type of array.
+     * Key "array" defines if the argument must be type of array ("type" key must be equal to NULL).
      *
      * @var array|bool
      */
@@ -50,9 +60,7 @@ class BaseFunctionValidator
     }
 
     /**
-     * Checks if the arguments of the callable functions are valid.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function isValid()
     {
@@ -70,7 +78,7 @@ class BaseFunctionValidator
     /**
      * Gets validation exception.
      *
-     * @return CallableFunctionValidatorException
+     * @return CallableFunctionValidatorException|\Exception
      */
     public function getException()
     {
@@ -78,11 +86,9 @@ class BaseFunctionValidator
     }
 
     /**
-     * Sets callable function.
+     * {@inheritDoc}
      *
-     * @param callable $callableFunction
-     *
-     * @return BaseFunctionValidator
+     * @return static
      */
     public function setCallableFunction(callable $callableFunction)
     {
@@ -117,10 +123,6 @@ class BaseFunctionValidator
 
         // Checking argument types.
         foreach ($this->argumentTypes as $k => $type) {
-            if (array_key_exists('omit', $type) && $type['omit'] === true) {
-                continue;
-            }
-
             if (!array_key_exists('type', $type)) {
                 throw new \InvalidArgumentException('Key "type" must be defined.');
             }

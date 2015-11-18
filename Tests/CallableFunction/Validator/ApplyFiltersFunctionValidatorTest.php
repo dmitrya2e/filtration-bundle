@@ -38,7 +38,7 @@ class ApplyFiltersFunctionValidatorTest extends TestCase
 
         $this->assertSame([
             ['type' => 'Da2e\FiltrationBundle\Filter\Filter\FilterInterface'],
-            ['omit' => true],
+            ['type' => null],
         ], $result);
     }
 
