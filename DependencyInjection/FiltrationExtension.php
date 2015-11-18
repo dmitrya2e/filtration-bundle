@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\DependencyInjection;
 
 use Da2e\FiltrationBundle\Model\FilterHandlerModel;
@@ -9,8 +18,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * Class FiltrationExtension
- * @package Da2e\FiltrationBundle\DependencyInjection
+ * This class handles applied configuration of the bundle and sets appropriate container parameters.
+ *
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 class FiltrationExtension extends Extension
 {
