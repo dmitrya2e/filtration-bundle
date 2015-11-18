@@ -13,7 +13,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter;
 
 /**
  * An interface, which can be used by filter to indicate if it has a custom function for appending form fields.
- * The interface must be used in coupe with FilterHasFormInterface.
+ * The interface should be used in coupe with FilterHasFormInterface.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */

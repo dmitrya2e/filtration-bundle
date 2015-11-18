@@ -13,7 +13,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter;
 
 /**
  * An interface, which can be used by filter to indicate if it has a custom function for applying filtration.
- * The interface must be used in coupe with FilterInterface.
+ * The interface should be used in coupe with FilterInterface.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
