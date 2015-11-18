@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\Exception\Form\Creator;
 
 use Da2e\FiltrationBundle\Exception\BaseException;
@@ -7,7 +16,7 @@ use Da2e\FiltrationBundle\Exception\BaseException;
 /**
  * An exception which can be used in FormCreator class.
  *
- * @package Da2e\FiltrationBundle\Exception\Form\Creator
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 class FormCreatorException extends BaseException
 {
