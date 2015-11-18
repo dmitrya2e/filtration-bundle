@@ -7,7 +7,8 @@ use Da2e\FiltrationBundle\Tests\TestCase;
 
 /**
  * Class BaseExceptionTest
- * @package Da2e\FiltrationBundle\Tests\Exception
+ *
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 class BaseExceptionTest extends TestCase
 {
