@@ -14,7 +14,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter\Doctrine\ORM;
 use Da2e\FiltrationBundle\Filter\Filter\AbstractEntityFilter;
 
 /**
- * Class EntityFilter
+ * Doctrine ORM entity filter.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */

@@ -16,7 +16,7 @@ use Da2e\FiltrationBundle\Exception\Filter\Filter\UnexpectedValueException;
 use Da2e\FiltrationBundle\Filter\Filter\AbstractTextFilter;
 
 /**
- * Class TextFilter
+ * Doctrine ORM text filter.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
@@ -76,7 +76,7 @@ class TextFilter extends AbstractTextFilter
      *
      * @param string $matchType TextFilter::MATCH_TYPE_*
      *
-     * @return AbstractTextFilter
+     * @return static
      * @throws InvalidArgumentException
      */
     public function setMatchType($matchType)

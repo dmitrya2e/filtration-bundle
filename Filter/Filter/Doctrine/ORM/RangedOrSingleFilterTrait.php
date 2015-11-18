@@ -15,7 +15,7 @@ use Da2e\FiltrationBundle\Exception\Filter\Filter\UnexpectedValueException;
 use Da2e\FiltrationBundle\Filter\Filter\AbstractRangeOrSingleFilter;
 
 /**
- * Class RangedOrSingleFilterTrait
+ * Trait with helpful methods for ranged/single filters.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */

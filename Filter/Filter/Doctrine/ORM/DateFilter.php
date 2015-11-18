@@ -15,7 +15,7 @@ use Da2e\FiltrationBundle\Filter\Filter\AbstractDateFilter;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Class DateFilter
+ * Doctrine ORM date (without time) filter.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
@@ -47,9 +47,9 @@ class DateFilter extends AbstractDateFilter
     /**
      * Applies single filter.
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      *
-     * @return $this
+     * @return static
      */
     protected function applySingleFilter(QueryBuilder $queryBuilder)
     {
@@ -68,9 +68,9 @@ class DateFilter extends AbstractDateFilter
     /**
      * Applies ranged filter.
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      *
-     * @return $this
+     * @return static
      */
     protected function applyRangedFilter(QueryBuilder $queryBuilder)
     {

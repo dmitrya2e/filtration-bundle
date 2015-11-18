@@ -15,7 +15,7 @@ use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidHandlerException;
 use Da2e\FiltrationBundle\Model\FilterHandlerModel;
 
 /**
- * Trait DoctrineORMFilterTrait
+ * Trait with helpful methods for Doctrine ORM filters.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */

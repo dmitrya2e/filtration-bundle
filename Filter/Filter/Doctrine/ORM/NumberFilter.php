@@ -15,7 +15,7 @@ use Da2e\FiltrationBundle\Filter\Filter\AbstractNumberFilter;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Class NumberFilter
+ * Doctrine ORM number filter.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
@@ -49,7 +49,7 @@ class NumberFilter extends AbstractNumberFilter
      *
      * @param QueryBuilder $queryBuilder
      *
-     * @return $this
+     * @return static
      */
     protected function applySingleFilter(QueryBuilder $queryBuilder)
     {
@@ -70,7 +70,7 @@ class NumberFilter extends AbstractNumberFilter
      *
      * @param QueryBuilder $queryBuilder
      *
-     * @return $this
+     * @return static
      */
     protected function applyRangedFilter(QueryBuilder $queryBuilder)
     {

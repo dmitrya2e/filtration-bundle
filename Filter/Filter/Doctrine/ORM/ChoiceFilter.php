@@ -14,7 +14,7 @@ namespace Da2e\FiltrationBundle\Filter\Filter\Doctrine\ORM;
 use Da2e\FiltrationBundle\Filter\Filter\AbstractChoiceFilter;
 
 /**
- * Class ChoiceFilter
+ * Doctrine ORM choice filter.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
