@@ -1,21 +1,30 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\Form\Creator;
 
 use Da2e\FiltrationBundle\Exception\Form\Creator\FormCreatorException;
 use Da2e\FiltrationBundle\Filter\Collection\CollectionInterface;
 use Da2e\FiltrationBundle\Filter\Filter\CustomAppendFormFieldsInterface;
 use Da2e\FiltrationBundle\Filter\Filter\FilterHasFormInterface;
-use Da2e\FiltrationBundle\Form\Type\FilterType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 
 /**
- * The default form creator class, which is used for creation of a filtration form, based on the filter collection.
- * The FormCreator basically creates and returns standard Symfony form objects.
+ * The default form creator class, which is used to create a filtration form, based on the filter collection.
+ * The FormCreator creates and returns standard Symfony form objects.
  *
- * @package Da2e\FiltrationBundle\Form\Creator
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 class FormCreator implements FormCreatorInterface
 {
@@ -41,8 +50,8 @@ class FormCreator implements FormCreatorInterface
     {
         $this->validateConfig($config);
 
-        $this->config = $config;
         $this->formFactory = $formFactory;
+        $this->config = $config;
     }
 
     /**
@@ -76,7 +85,7 @@ class FormCreator implements FormCreatorInterface
      * Creates the filtration form.
      *
      * @param CollectionInterface $filterCollection         The collection of the filters
-     * @param null|string         $name                     The name of the root form
+     * @param null|string         $name                     (Optional) The name of the root form
      * @param array               $rootFormBuilderOptions   (Optional) The options for the root form
      * @param array               $filterFormBuilderOptions (Optional) The options for each filter form
      *
@@ -105,7 +114,7 @@ class FormCreator implements FormCreatorInterface
                     $filter->getName(),
                     $this->createFilterFormType(),
                     $filter,
-                    array_merge($filterFormBuilderOptions, ['data_class' => get_class($filter),])
+                    array_merge($filterFormBuilderOptions, ['data_class' => get_class($filter)])
                 );
 
                 // Append the filter to the filter form.
@@ -124,10 +133,10 @@ class FormCreator implements FormCreatorInterface
      * Appends a filter to the representation form.
      * If the filter has defined a custom function for form appending, than it will be used.
      *
-     * @param FilterHasFormInterface $filter            The filter itself
+     * @param FilterHasFormInterface $filter            The filter
      * @param FormBuilderInterface   $filterFormBuilder A form builder for a specific filter
      *
-     * @return FilterHasFormInterface
+     * @return FilterHasFormInterface|CustomAppendFormFieldsInterface
      */
     protected function appendFormField(FilterHasFormInterface $filter, FormBuilderInterface $filterFormBuilder)
     {
@@ -140,6 +149,7 @@ class FormCreator implements FormCreatorInterface
         $callableFunction = $filter->getAppendFormFieldsFunction();
 
         if (!is_callable($callableFunction)) {
+            /** @var FilterHasFormInterface $filter */
             $filter->appendFormFieldsToForm($filterFormBuilder);
 
             return $filter;
@@ -153,7 +163,7 @@ class FormCreator implements FormCreatorInterface
     /**
      * Creates and returns a form builder.
      *
-     * @param null|string   $name    For named form builder
+     * @param null|string   $name    For named form builder must not be null
      * @param string|object $type    Form type
      * @param mixed|null    $data    Form data
      * @param array         $options Form builder options
@@ -172,7 +182,7 @@ class FormCreator implements FormCreatorInterface
     /**
      * Creates filter form type object.
      *
-     * @return FilterType|object
+     * @return FormTypeInterface
      */
     protected function createFilterFormType()
     {
