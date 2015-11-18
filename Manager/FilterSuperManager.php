@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Da2e FiltrationBundle package.
+ *
+ * (c) Dmitry Abrosimov <abrosimovs@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Da2e\FiltrationBundle\Manager;
 
 use Da2e\FiltrationBundle\Filter\Collection\CollectionInterface;
@@ -21,33 +30,38 @@ use Symfony\Component\HttpFoundation\Request;
  * However, it is only the choice of every developer whether to use this manager or not.
  * Check the documentation to find out how to work with the filters without FilterSuperManager.
  *
- * @package Da2e\FiltrationBundle\Manager
+ * @uses \Da2e\FiltrationBundle\Filter\Collection\Creator\CollectionCreatorInterface::create()
+ * @uses \Da2e\FiltrationBundle\Filter\Collection\CollectionManagerInterface::add()
+ * @uses \Da2e\FiltrationBundle\Form\Creator\FormCreatorInterface::create()
+ * @uses \Da2e\FiltrationBundle\Form\Creator\FormCreatorInterface::createNamed()
+ * @uses \Da2e\FiltrationBundle\Filter\Executor\FilterExecutorInterface::execute()
+ * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 class FilterSuperManager
 {
     /**
-     * Used for creation a filter collection.
+     * Used to create a filter collection.
      *
      * @var CollectionCreatorInterface
      */
     protected $collectionCreator;
 
     /**
-     * Used for managing the collection and its filters.
+     * Used to manage the collection and its filters.
      *
      * @var CollectionManagerInterface
      */
     protected $collectionManager;
 
     /**
-     * Used for creation a filtration form.
+     * Used to create a filtration form.
      *
      * @var FormCreatorInterface
      */
     protected $formCreator;
 
     /**
-     * Used for executing the filtration regarding filtration handler.
+     * Used to execute the filtration regarding filtration handler.
      *
      * @var FilterExecutorInterface
      */
