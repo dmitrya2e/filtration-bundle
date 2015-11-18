@@ -17,7 +17,19 @@ use Da2e\FiltrationBundle\Filter\Filter\Sphinx\SphinxFilterTrait;
 use \SphinxClient as SphinxClient;
 
 /**
- * Class DateFilter
+ * Sphinx API date (without time) filter.
+ *
+ * DateFilter has settings related to SphinxSearch API and \SphinxClient library only. These are:
+ *  - default min value
+ *  - default max value
+ *
+ * This is done, because \SphinxClient does not allow to make filter
+ * like "setFilterRange('field', null, 100)" or "setFilterRange('field', 15, null)".
+ *
+ * In other words it can't filter by min value OR by max value only, it require both bounds to be set.
+ *
+ * So basically, when no min value is applied, the default min value is considered as actual min value.
+ * And when no max value is applied, the default max value is considered as actual max value.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
@@ -31,20 +43,6 @@ class DateFilter extends AbstractDateFilter
 
     // Hope, that 2038 year is yet in the future...
     const DEFAULT_MAX = '2038-01-19';
-
-    /**
-     * DateFilter has settings related to SphinxSearch API and \SphinxClient library only. These are:
-     *  - default min value
-     *  - default max value
-     *
-     * This is done, because \SphinxClient does not allow to make filter
-     * like "setFilterRange('field', null, 100)" or "setFilterRange('field', 15, null)".
-     *
-     * In other words it can't filter by min value OR by max value only, it require both bounds to be set.
-     *
-     * So basically, when no min value is applied, the default min value is considered as actual min value.
-     * And when no max value is applied, the default max value is considered as actual max value.
-     */
 
     /**
      * @var \DateTime
@@ -112,6 +110,8 @@ class DateFilter extends AbstractDateFilter
     }
 
     /**
+     * Sets default min value. Note, that time will be reset while value conversion.
+     *
      * @param \DateTime $defaultMin
      *
      * @return static
@@ -124,6 +124,8 @@ class DateFilter extends AbstractDateFilter
     }
 
     /**
+     * Gets default min value.
+     *
      * @return \DateTime
      */
     public function getDefaultMin()
@@ -132,6 +134,8 @@ class DateFilter extends AbstractDateFilter
     }
 
     /**
+     * Sets default max value. Note, that time will be set to 23:59:59 while value conversion.
+     *
      * @param \DateTime $defaultMax
      *
      * @return static
@@ -144,6 +148,8 @@ class DateFilter extends AbstractDateFilter
     }
 
     /**
+     * Gets default max value.
+     *
      * @return \DateTime
      */
     public function getDefaultMax()
@@ -152,11 +158,11 @@ class DateFilter extends AbstractDateFilter
     }
 
     /**
-     * Applies exact date filter.
+     * Applies single filter.
      *
      * @param \SphinxClient $sphinxClient
      *
-     * @return $this
+     * @return static
      * @throws LogicException
      */
     protected function applySingleFilter(\SphinxClient $sphinxClient)
@@ -199,7 +205,7 @@ class DateFilter extends AbstractDateFilter
      *
      * @param \SphinxClient $sphinxClient
      *
-     * @return $this
+     * @return static
      * @throws LogicException
      */
     protected function applyRangedFilter(\SphinxClient $sphinxClient)

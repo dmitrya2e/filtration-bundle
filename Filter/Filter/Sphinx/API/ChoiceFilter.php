@@ -16,7 +16,7 @@ use Da2e\FiltrationBundle\Filter\Filter\Sphinx\SphinxFilterTrait;
 use \SphinxClient as SphinxClient;
 
 /**
- * Class ChoiceFilter
+ * Sphinx API choice filter.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */

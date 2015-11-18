@@ -12,7 +12,7 @@
 namespace Da2e\FiltrationBundle\Filter\Filter\Sphinx;
 
 /**
- * Class SphinxFilterTrait
+ * Trait with helpful methods for all SphinxSearch filters.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
@@ -24,6 +24,8 @@ trait SphinxFilterTrait
     protected $exclude = false;
 
     /**
+     * Checks if the filter must exclude values.
+     *
      * @return boolean
      */
     public function isExclude()
@@ -32,7 +34,7 @@ trait SphinxFilterTrait
     }
 
     /**
-     * Sets exclude flag.
+     * Sets exclude flag for filter to exclude (or not) values.
      *
      * @param boolean $exclude
      *
@@ -46,6 +48,10 @@ trait SphinxFilterTrait
     }
 
     /**
+     * Gets "exclude" option description.
+     *
+     * @see FilterOptionInterface::getValidOptions()
+     *
      * @return array
      */
     protected static function getExcludeOptionDescription()

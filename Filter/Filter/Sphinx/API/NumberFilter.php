@@ -18,7 +18,19 @@ use Da2e\FiltrationBundle\Filter\Filter\Sphinx\SphinxFilterTrait;
 use \SphinxClient as SphinxClient;
 
 /**
- * Class NumberFilter
+ * Sphinx API number filter.
+ *
+ * NumberFilter has settings related to SphinxSearch API and \SphinxClient library only. These are:
+ *  - default min value
+ *  - default max value
+ *
+ * This is done, because \SphinxClient does not allow to make filter
+ * like "setFilterRange('field', null, 100)" or "setFilterRange('field', 15, null)".
+ *
+ * In other words it can't filter by min value OR by max value only, it require both bounds to be set.
+ *
+ * So basically, when no min value is applied, the default min value is considered as actual min value.
+ * And when no max value is applied, the default max value is considered as actual max value.
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
@@ -28,30 +40,29 @@ class NumberFilter extends AbstractNumberFilter
     use SphinxTypeTrait;
 
     /**
-     * NumberFilter has settings related to SphinxSearch API and \SphinxClient library only. These are:
-     *  - default min value
-     *  - default max value
-     *
-     * This is done, because \SphinxClient does not allow to make filter
-     * like "setFilterRange('field', null, 100)" or "setFilterRange('field', 15, null)".
-     *
-     * In other words it can't filter by min value OR by max value only, it require both bounds to be set.
-     *
-     * So basically, when no min value is applied, the default min value is considered as actual min value.
-     * And when no max value is applied, the default max value is considered as actual max value.
-     */
-
-    /**
-     * @var mixed|int
+     * @var float|int
      */
     protected $defaultMin = 0;
 
     /**
-     * @var mixed|int
+     * @var float|int
      */
     protected $defaultMax = PHP_INT_MAX;
 
     /**
+     * Float step (needed only for float mode).
+     * This is the minimal step for floats when performing filtration considering bounds type (greater, greater or
+     * equal, ...).
+     *
+     * If ranged "from" type is "greater", than "from" value will be set with $defaultFloatStep added to it:
+     *  - $fromValue = 10
+     *  - $defaultFloatStep = 0.01
+     *  - $rangedFromType = RANGED_FROM_TYPE_GREATER
+     *  - SetFilterFloatRange('field', 10.01, ...)
+     *
+     * The same logic applies to ranged "to" value with "less" type - it will be set with $defaultFloatStep subtracted
+     * from it.
+     *
      * @var float
      */
     protected $defaultFloatStep = 0.01;
@@ -100,6 +111,8 @@ class NumberFilter extends AbstractNumberFilter
     }
 
     /**
+     * Sets default min value.
+     *
      * @param int|float $defaultMin
      *
      * @return static
@@ -117,6 +130,8 @@ class NumberFilter extends AbstractNumberFilter
     }
 
     /**
+     * Gets default min value.
+     *
      * @return int|float
      */
     public function getDefaultMin()
@@ -125,6 +140,8 @@ class NumberFilter extends AbstractNumberFilter
     }
 
     /**
+     * Sets default max value.
+     *
      * @param int|float $defaultMax
      *
      * @return static
@@ -142,6 +159,8 @@ class NumberFilter extends AbstractNumberFilter
     }
 
     /**
+     * Gets default max value.
+     *
      * @return int|float
      */
     public function getDefaultMax()
@@ -150,9 +169,11 @@ class NumberFilter extends AbstractNumberFilter
     }
 
     /**
+     * Sets default float step.
+     *
      * @param float $defaultFloatStep
      *
-     * @return NumberFilter
+     * @return static
      * @throws InvalidArgumentException On invalid parameter
      */
     public function setDefaultFloatStep($defaultFloatStep)
@@ -167,6 +188,8 @@ class NumberFilter extends AbstractNumberFilter
     }
 
     /**
+     * Gets default float step.
+     *
      * @return float
      */
     public function getDefaultFloatStep()
@@ -175,11 +198,11 @@ class NumberFilter extends AbstractNumberFilter
     }
 
     /**
-     * Applies exact filter.
+     * Applies single filter.
      *
      * @param \SphinxClient $sphinxClient
      *
-     * @return $this
+     * @return static
      * @throws LogicException On invalid value bounding
      */
     protected function applySingleFilter(\SphinxClient $sphinxClient)
@@ -216,7 +239,7 @@ class NumberFilter extends AbstractNumberFilter
      *
      * @param \SphinxClient $sphinxClient
      *
-     * @return $this
+     * @return static
      * @throws LogicException On unexpected errors
      */
     protected function applyRangedFilter(\SphinxClient $sphinxClient)
@@ -310,6 +333,7 @@ class NumberFilter extends AbstractNumberFilter
 
     /**
      * Gets converted default min value.
+     * The conversion includes only casting to correct type.
      *
      * @return float|int
      */
@@ -334,6 +358,7 @@ class NumberFilter extends AbstractNumberFilter
 
     /**
      * Gets converted default max value.
+     * The conversion includes only casting to correct type.
      *
      * @return float|int
      */
