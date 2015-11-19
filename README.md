@@ -5,9 +5,11 @@
 Current status: **WORK IN PROGRESS**.
 
 FiltrationBundle provides a convenient and easy way for creating filtration component/form on your website built with Symfony 2.
-The bundle includes the following features:
+Its purpose is to create a standard way and workflow for managing data filtration in Symfony 2 websites. 
 
-- Built-in integration with Symfony forms to render the filters in views
+The bundle includes following features:
+
+- Built-in integration with Symfony forms to render filters in views
 - Auto-execution of applied filters regarding specific filtration handler (e.g. Doctrine ORM)
 - Possibility to add custom filters and custom filtration handlers
 - Possibility to customize standard bundle filters
@@ -17,6 +19,7 @@ The bundle includes the following features:
 Plans:
 
 - Add more standard filters (boolean, time, datetime, ...) and more standard filter adapters (Doctrine ODM, SphinxQL, plain SQL queries, ...)
+- Implement validation of filter values
 - Implement sorting component
 - ...
 
