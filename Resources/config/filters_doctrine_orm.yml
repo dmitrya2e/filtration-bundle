@@ -1,9 +1,9 @@
 parameters:
-    da2e.filtration.filter.filter.doctrine.orm.text_filter_class: Da2e\FiltrationBundle\Filter\Doctrine\ORM\TextFilter
-    da2e.filtration.filter.filter.doctrine.orm.number_filter_class: Da2e\FiltrationBundle\Filter\Doctrine\ORM\NumberFilter
-    da2e.filtration.filter.filter.doctrine.orm.date_filter_class: Da2e\FiltrationBundle\Filter\Doctrine\ORM\DateFilter
-    da2e.filtration.filter.filter.doctrine.orm.choice_filter_class: Da2e\FiltrationBundle\Filter\Doctrine\ORM\ChoiceFilter
-    da2e.filtration.filter.filter.doctrine.orm.entity_filter_class: Da2e\FiltrationBundle\Filter\Doctrine\ORM\EntityFilter
+    da2e.filtration.filter.filter.doctrine.orm.text_filter_class: Da2e\FiltrationBundle\Filter\Filter\Doctrine\ORM\TextFilter
+    da2e.filtration.filter.filter.doctrine.orm.number_filter_class: Da2e\FiltrationBundle\Filter\Filter\Doctrine\ORM\NumberFilter
+    da2e.filtration.filter.filter.doctrine.orm.date_filter_class: Da2e\FiltrationBundle\Filter\Filter\Doctrine\ORM\DateFilter
+    da2e.filtration.filter.filter.doctrine.orm.choice_filter_class: Da2e\FiltrationBundle\Filter\Filter\Doctrine\ORM\ChoiceFilter
+    da2e.filtration.filter.filter.doctrine.orm.entity_filter_class: Da2e\FiltrationBundle\Filter\Filter\Doctrine\ORM\EntityFilter
 
 services:
     da2e.filtration.filter.filter.doctrine.orm.text_filter:
