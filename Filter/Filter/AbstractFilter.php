@@ -203,7 +203,9 @@ abstract class AbstractFilter implements
      */
     public function __construct($name = null)
     {
-        $this->setName($name);
+        if (!empty($name)) {
+            $this->setName($name);
+        }
 
         // Configure the filter before any other work is done.
         $this->configure();

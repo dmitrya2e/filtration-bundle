@@ -35,6 +35,7 @@ class FilterChain implements FilterChainInterface
      */
     public function addType(FilterInterface $type, $alias)
     {
+        $type->setName($alias);
         $this->types[$alias] = $type;
 
         return $this;
