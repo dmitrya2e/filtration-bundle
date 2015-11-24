@@ -31,7 +31,7 @@ It is required to set the minimal configuration in app/config/config.yml to make
 
 ```yaml
 # app/config/config.yml
-filtration_bundle:
+da2e_filtration:
     handlers:
         doctrine_orm: true # Or any other supported handler, e.g. "sphinx_api"
 ```

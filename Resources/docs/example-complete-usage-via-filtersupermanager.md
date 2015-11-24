@@ -8,7 +8,7 @@
 - This example uses Doctrine ORM query builder as filtration handler, so you must enable it in bundle configuration:
 ```yaml
 # app/config/config.yml
-filtration_bundle:
+da2e_filtration:
     handlers:
         doctrine_orm: true
 ```
