@@ -8,6 +8,7 @@
 - This example uses Doctrine ORM query builder as filtration handler, so you must enable it in bundle configuration:
 ```yaml
 # app/config/config.yml
+
 da2e_filtration:
     handlers:
         doctrine_orm: true
@@ -78,23 +79,6 @@ public function yourAction(Request $request)
 ### View
 
 Filtration form is standard Symfony Form object, so you can pass a FormView ($form->createView()) to the template and use it as usual.
-
-```php
-// YourController.php
-
-public function yourAction(Request $request)
-{
-    $manager = $this->get('da2e.filtration.manager.filter_super_manager');
-    
-    // Create collection and add filters to it
-    $collection = $manager->createFilterCollection();
-    $form = $manager->createNamedForm('filters', $collection, [], [], $request);
-
-    return $this->render('your/template.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
-```
 
 Template does not contain any special logic for rendering form - everything is done through standard Symfony/Twig functions.
 Template engine in this example uses Twig, but since filtration form is a Symfony Form object, it is possible to use any preferable template engine.

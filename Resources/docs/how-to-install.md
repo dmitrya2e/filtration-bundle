@@ -16,6 +16,7 @@ Next, you must enable the bundle in application kernel (app/AppKernel.php):
 
 ```php
 // app/AppKernel.php
+
 public function registerBundles()
 {
     return array(
@@ -31,6 +32,7 @@ It is required to set the minimal configuration in app/config/config.yml to make
 
 ```yaml
 # app/config/config.yml
+
 da2e_filtration:
     handlers:
         doctrine_orm: true # Or any other supported handler, e.g. "sphinx_api"

@@ -1,7 +1,5 @@
 # Usage example via separate components
 
-TODO
-
 ## Prerequisites of the example
 
 - This example creates 2 filters (name and price)
@@ -10,6 +8,7 @@ TODO
 - This example uses Doctrine ORM query builder as filtration handler, so you must enable it in bundle configuration:
 ```yaml
 # app/config/config.yml
+
 da2e_filtration:
     handlers:
         doctrine_orm: true
@@ -24,24 +23,63 @@ Please, read carefully comments in the code. They are intended to explain what i
 
 public function yourAction(Request $request)
 {
-    
+    // Create a filtration handler (this example uses Doctrine ORM query builder).
+    $queryBuilder = $this->get('doctrine.orm.entity_manager')
+        ->getRepository('YourBundle:YourRepository')
+        ->createQueryBuilder('foo');
+
+    // You can set any query builder conditions if required, it will be kept along with the applied filters.
+    $queryBuilder->where('foo.bar = :bar')->setParameter('bar', 'bar2');
+    $queryBuilder->andWhere('foo.baz = :baz')->setParameter('baz', 'baz2');
+
+    // 1. Create a filter collection.
+    $collection = $this->get('da2e.filtration.filter.collection.creator.collection_creator')->create();
+
+    // 2. Get filter collection manager and add filters to the collection.
+    $collectionManager = $this->get('da2e.filtration.filter.collection.collection_manager');
+
+    // - 1st argument is filter alias from the service definition.
+    // - 2nd argument is the name of the filter.
+    // - 3rd argument is the filter collection itself.
+    // - 4th argument contains filter options (optional argument).
+    $collectionManager->add('orm_text_filter', 'name', $collection, [
+        'field_name' => 'foo.name',
+    ]);
+
+    $collectionManager->add('orm_number_filter', 'price', $collection, [
+        'field_name' => 'foo.price',
+        'float'      => true,
+    ]);
+
+    // 3. Get form creator and create a form (this example creates a named form).
+    // - 1st argument is the name of the root form.
+    $form = $this->get('da2e.filtration.form.creator.form_creator')->createNamed('filters', $collection);
+    $form->handleRequest($request);
+
+    // 4. Get filter executor and execute filtration.
+    $filterExecutor = $this->get('da2e.filtration.filter.executor.filter_executor');
+
+    // You must pass the filtration handler in array as the 2nd argument.
+    $filterExecutor->execute($collection, [$queryBuilder]);
+
+    // You can also set query builder conditions after applying filtration.
+    // However, do not use method setParameters([...]), because it will override everything set while applying filters.
+    $queryBuilder->orderBy('foo.created', 'DESC');
+
+    // Fetch filtered results in any way you need.
+    $results = $queryBuilder->getQuery()->execute();
+
+    // Finally, just return a standard response with form passed to the template.
+    return $this->render('your/template.html.twig', [
+        'form'    => $form->createView(),
+        'results' => $results,
+    ]);
 }
 ```
 
 ### View
 
 Filtration form is standard Symfony Form object, so you can pass a FormView ($form->createView()) to the template and use it as usual.
-
-```php
-// YourController.php
-
-public function yourAction(Request $request)
-{
-    return $this->render('your/template.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
-```
 
 Template does not contain any special logic for rendering form - everything is done through standard Symfony/Twig functions.
 Template engine in this example uses Twig, but since filtration form is a Symfony Form object, it is possible to use any preferable template engine.
