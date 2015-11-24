@@ -52,4 +52,4 @@ And you are done, the bundle is ready!
 
 Check out [the overview of all filtration components and its workflow](overview-of-components-and-workflow.md) to understand how the bundle works or just start with an examples:
 - [Complete usage example via FilterSuperManager](example-complete-usage-via-filtersupermanager.md)
-- [Complete usage example via separate components](example-completed-usage-via-separate-components.md)
+- [Complete usage example via separate components](example-complete-usage-via-separate-components.md)

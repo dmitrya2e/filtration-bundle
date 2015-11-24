@@ -42,7 +42,7 @@
 ## Examples
 
 - [Complete usage example via FilterSuperManager](example-complete-usage-via-filtersupermanager.md)
-- [Complete usage example via separate components](example-completed-usage-via-separate-components.md)
+- [Complete usage example via separate components](example-complete-usage-via-separate-components.md)
 - [Customization and override of standard bundle components](example-customize-standard-components.md)
 - [Creation of custom filter](example-create-custom-filter.md)
 - [Adding a custom filtration handler](example-add-custom-filtration-handler.md)
