@@ -3,6 +3,7 @@
 ## Prerequisites of the example
 
 - This example creates 2 filters (name and price)
+- Template engine in this example is Twig
 - Filtration form is created and passed to the template
 - This example uses Doctrine ORM query builder as filtration handler, so you must enable it in bundle configuration:
 ```yaml
@@ -18,6 +19,7 @@ Please, read carefully comments in the code. They are intended to explain what i
 
 ```php
 // YourController.php
+
 public function yourAction(Request $request)
 {
     // Create a filtration handler (this example uses Doctrine ORM query builder).
@@ -39,8 +41,14 @@ public function yourAction(Request $request)
     // - 2nd argument is filter alias from the service definition.
     // - 3rd argument is the name of the filter.
     // - 4th argument contains filter options (optional argument).
-    $manager->addFilter($collection, 'orm_text_filter', 'name', ['field_name' => 'foo.db_name',]);
-    $manager->addFilter($collection, 'orm_text_filter', 'price', ['field_name' => 'foo.price', 'default_value' => 100]);
+    $manager->addFilter($collection, 'orm_text_filter', 'name', [
+        'field_name' => 'foo.db_name',
+    ]);
+    
+    $manager->addFilter($collection, 'orm_number_filter', 'price', [
+        'field_name'    => 'foo.price', 
+        'default_value' => 100
+    ]);
 
     // 4. Create filtration form.
     // - 1st argument is the root form name.
@@ -68,3 +76,37 @@ public function yourAction(Request $request)
 ```
 
 ### View
+
+Filtration form is just standard Symfony Form object, so you can pass a FormView ($form->createView()) to the template and use it as usual.
+
+```php
+// YourController.php
+
+public function yourAction(Request $request)
+{
+    $manager = $this->get('da2e.filtration.manager.filter_super_manager');
+    
+    // Create collection and add filters to it
+    $collection = $manager->createFilterCollection();
+    $form = $manager->createNamedForm('filters', $collection, [], [], $request);
+
+    return $this->render('your/template.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
+```
+
+Template does not contain any special logic for rendering form - everything is done through standard Symfony/Twig functions.
+Template engine in this example uses Twig, but since filtration form is just a Symfony Form object, it is possible to use any preferable template engine.
+
+```twig
+# template.html.twig
+
+<form action="..." method="GET">
+    # Filtration form is just standard Symfony form view object, so you could do anything you would do with forms in Twig.
+    {{ form_row(form.filters.name) }}
+    {{ form_row(form.filters.price) }}
+    
+    <input type="submit"/>
+</form>
+```
