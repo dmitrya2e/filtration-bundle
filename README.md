@@ -23,6 +23,8 @@ Plans:
 - Implement sorting component
 - ...
 
+The first version of the bundle was developed within [AXIOMA web-studio](https://www.axiomadev.com/), the company where I work.
+
 ## Software requirements:
 
 - PHP 5.4++
@@ -38,4 +40,4 @@ Plans:
 
 ## License
 
-This bundle is under the [MIT license](LICENSE).
+This bundle is under the [MIT license](LICENSE). 
