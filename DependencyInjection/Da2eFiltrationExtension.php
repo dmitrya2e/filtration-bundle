@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
-class FiltrationExtension extends Extension
+class Da2eFiltrationExtension extends Extension
 {
     /**
      * {@inheritDoc}

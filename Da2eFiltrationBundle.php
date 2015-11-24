@@ -18,7 +18,7 @@ use Da2e\FiltrationBundle\DependencyInjection\Compiler\FiltrationCompilePass;
 /**
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
-class FiltrationBundle extends Bundle
+class Da2eFiltrationBundle extends Bundle
 {
     /**
      * {@inheritDoc}

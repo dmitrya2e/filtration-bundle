@@ -12,14 +12,14 @@
 namespace Da2e\FiltrationBundle\Tests;
 
 use Da2e\FiltrationBundle\DependencyInjection\Compiler\FiltrationCompilePass;
-use Da2e\FiltrationBundle\FiltrationBundle;
+use Da2e\FiltrationBundle\Da2eFiltrationBundle;
 
 /**
- * Class FiltrationBundleTest
+ * Class Da2eFiltrationBundleTest
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
-class FiltrationBundleTest extends TestCase
+class Da2eFiltrationBundleTest extends TestCase
 {
     public function testBuild()
     {
@@ -29,7 +29,7 @@ class FiltrationBundleTest extends TestCase
 
         $containerMock->expects($this->once())->method('addCompilerPass')->with(new FiltrationCompilePass());
 
-        $bundle = new FiltrationBundle();
+        $bundle = new Da2eFiltrationBundle();
         $bundle->build($containerMock);
     }
 }

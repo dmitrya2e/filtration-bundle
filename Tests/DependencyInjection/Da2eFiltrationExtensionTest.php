@@ -11,12 +11,12 @@
 
 namespace Da2e\FiltrationBundle\Tests\DependencyInjection;
 
-use Da2e\FiltrationBundle\DependencyInjection\FiltrationExtension;
+use Da2e\FiltrationBundle\DependencyInjection\Da2eFiltrationExtension;
 use Da2e\FiltrationBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Class FiltrationExtensionTest
+ * Class Da2eFiltrationExtensionTest
  *
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
@@ -25,7 +25,7 @@ class FiltrationExtensionTest extends TestCase
     public function testLoad()
     {
         $containerBuilder = new ContainerBuilder();
-        $extension = new FiltrationExtension();
+        $extension = new Da2eFiltrationExtension();
 
         $configs = [
             'da2e_filtration' => [
