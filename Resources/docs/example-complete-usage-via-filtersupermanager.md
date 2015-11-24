@@ -77,7 +77,7 @@ public function yourAction(Request $request)
 
 ### View
 
-Filtration form is just standard Symfony Form object, so you can pass a FormView ($form->createView()) to the template and use it as usual.
+Filtration form is standard Symfony Form object, so you can pass a FormView ($form->createView()) to the template and use it as usual.
 
 ```php
 // YourController.php
@@ -97,13 +97,13 @@ public function yourAction(Request $request)
 ```
 
 Template does not contain any special logic for rendering form - everything is done through standard Symfony/Twig functions.
-Template engine in this example uses Twig, but since filtration form is just a Symfony Form object, it is possible to use any preferable template engine.
+Template engine in this example uses Twig, but since filtration form is a Symfony Form object, it is possible to use any preferable template engine.
 
 ```twig
 # template.html.twig
 
 <form action="..." method="GET">
-    # Filtration form is just standard Symfony form view object, so you could do anything you would do with forms in Twig.
+    # Filtration form is standard Symfony form view object, so you could do anything you would do with forms in Twig.
     {{ form_row(form.filters.name) }}
     {{ form_row(form.filters.price) }}
     
