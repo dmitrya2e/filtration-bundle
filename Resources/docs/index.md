@@ -30,7 +30,6 @@
     - ["Apply filters" validator](callable-validators-apply-filters-validator.md)
     - ["Has applied value" validator](callable-validators-has-applied-value-validator.md)
     - ["Convert value" validator](callable-validators-convert-value-validator.md)
-    - ["Convert ranged value" validator](callable-validators-convert-ranged-value-validator.md)
     - ["Append form fields" validator](callable-validators-append-form-fields-validator.md)
 - [Exceptions](exceptions.md)
 - [Translations](translations.md)

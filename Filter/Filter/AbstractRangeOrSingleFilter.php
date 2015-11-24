@@ -11,8 +11,6 @@
 
 namespace Da2e\FiltrationBundle\Filter\Filter;
 
-use Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface;
-use Da2e\FiltrationBundle\CallableFunction\Validator\ConvertRangedValueFunctionValidator;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\FilterException;
 use Da2e\FiltrationBundle\Exception\Filter\Filter\InvalidArgumentException;
 
@@ -731,19 +729,5 @@ abstract class AbstractRangeOrSingleFilter extends AbstractFilter
         $this->formFieldTypeRangedTo = $formFieldTypeRangedTo;
 
         return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return CallableFunctionValidatorInterface|ConvertRangedValueFunctionValidator
-     */
-    public function getCallableValidatorConvertValue()
-    {
-        if ($this->callableValidatorConvertValue === false) {
-            $this->callableValidatorConvertValue = new ConvertRangedValueFunctionValidator();
-        }
-
-        return $this->callableValidatorConvertValue;
     }
 }

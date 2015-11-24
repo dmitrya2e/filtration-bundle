@@ -741,16 +741,6 @@ class AbstractRangeOrSingleFilterTest extends AbstractFilterTestCase
         $this->assertEquals(count($args), $exceptionCount);
     }
 
-    public function testGetCallableValidatorConvertValue()
-    {
-        $mock = $this->getAbstractRangeOrSingleFilterMock();
-        $result = $mock->getCallableValidatorConvertValue();
-        $this->assertInstanceOf(
-            '\Da2e\FiltrationBundle\CallableFunction\Validator\ConvertRangedValueFunctionValidator',
-            $result
-        );
-    }
-
     /**
      * Gets AbstractRangeOrSingleFilter mock object.
      *
