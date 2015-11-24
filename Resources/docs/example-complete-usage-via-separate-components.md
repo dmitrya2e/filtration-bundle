@@ -42,11 +42,11 @@ public function yourAction(Request $request)
     // - 2nd argument is the name of the filter.
     // - 3rd argument is the filter collection itself.
     // - 4th argument contains filter options (optional argument).
-    $collectionManager->add('orm_text_filter', 'name', $collection, [
+    $collectionManager->add('da2e_orm_text_filter', 'name', $collection, [
         'field_name' => 'foo.name',
     ]);
 
-    $collectionManager->add('orm_number_filter', 'price', $collection, [
+    $collectionManager->add('da2e_orm_number_filter', 'price', $collection, [
         'field_name' => 'foo.price',
         'float'      => true,
     ]);

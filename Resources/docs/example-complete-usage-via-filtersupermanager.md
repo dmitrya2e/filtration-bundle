@@ -42,11 +42,11 @@ public function yourAction(Request $request)
     // - 2nd argument is filter alias from the service definition.
     // - 3rd argument is the name of the filter.
     // - 4th argument contains filter options (optional argument).
-    $manager->addFilter($collection, 'orm_text_filter', 'name', [
+    $manager->addFilter($collection, 'da2e_orm_text_filter', 'name', [
         'field_name' => 'foo.db_name',
     ]);
     
-    $manager->addFilter($collection, 'orm_number_filter', 'price', [
+    $manager->addFilter($collection, 'da2e_orm_number_filter', 'price', [
         'field_name'    => 'foo.price', 
         'default_value' => 100
     ]);
