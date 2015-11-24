@@ -41,7 +41,7 @@ class AbstractFilterTest extends AbstractFilterTestCase
      */
     public function testConstruct_InvalidName()
     {
-        $this->getAbstractFilterMock(false, null);
+        $this->getAbstractFilterMock(false, ['foo']);
     }
 
     public function testGetValidOptions()
