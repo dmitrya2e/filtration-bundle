@@ -24,6 +24,28 @@ Whole workflow of the filtration bundle consist of several components:
 
 ### Form creator
 
+## Filtration form
+
+As it was already mentioned, the bundles core feature is a form support.
+
+FiltrationBundle uses standard Symfony form objects to provide this possibility. The form is being mapped with fields and populated from the filter collection.
+
+The form can be created via form creator component and passed to the template as FormView object.
+
+### Filter form type
+
+To create a form field for each filter, it is required to have a prototype of form type object.
+
+The bundle is packaged with a default one filter form type - **FilterType**, which is used for every filter. 
+It is just an instance of Symfony FormTypeInterface with minimal configuration in it.
+
+If for some reason you need your own form type object, you can easily override it in configuration.
+
+### Filters in templates
+
+Since FiltrationBundle uses standard Symfony form objects and forms are being passed as FormView objects to templates, it is possible to do anything you would do with any other forms in templates.
+This also means that you can use any template engine, which Symfony supports.
+
 ## How to glue everything together
 
 The bundle is packaged with a single manager, which is responsible for all workflow and all components.
