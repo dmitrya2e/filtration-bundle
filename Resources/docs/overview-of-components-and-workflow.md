@@ -3,6 +3,7 @@
 ## Introduction
 
 Whole workflow of the filtration bundle consist of several components:
+- Abstract filter object
 - Filter creator
 - Filter option handler
 - Filter collection creator
@@ -10,7 +11,15 @@ Whole workflow of the filtration bundle consist of several components:
 - Filter executor
 - Form creator
 
+However, it is not necessary to use exactly these components (which would be strange, because the bundle provides them ready and for specific purposes).
+
+You can replace any of them with your own implementations or you can use only concrete filter objects (which are based on abstract filter object) without any of other components, or even use FilterInterface only to build your own custom filter.
+
+Keep in mind, that for your own filters the only essential requirement is to have them implemented FilterInterface.
+
 ## Components overview
+
+### Abstract filter
 
 ### Filter creator
 
@@ -32,6 +41,8 @@ FiltrationBundle uses standard Symfony form objects to provide this possibility.
 
 The form can be created via form creator component and passed to the template as FormView object.
 
+[Learn more about form creator component](form-creator.md).
+
 ### Filter form type
 
 To create a form field for each filter, it is required to have a prototype of form type object.
@@ -40,6 +51,8 @@ The bundle is packaged with a default one filter form type - **FilterType**, whi
 It is just an instance of Symfony FormTypeInterface with minimal configuration in it.
 
 If for some reason you need your own form type object, you can easily override it in configuration.
+
+[Learn more about form creator component](form-filter-type.md).
 
 ### Filters in templates
 
