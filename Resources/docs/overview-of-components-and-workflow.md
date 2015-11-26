@@ -15,11 +15,30 @@ However, it is not necessary to use exactly these components (which would be str
 
 You can replace any of them with your own implementations or you can use only concrete filter objects (which are based on abstract filter object) without any of other components, or even use FilterInterface only to build your own custom filter.
 
-Keep in mind, that for your own filters the only essential requirement is to have them implemented FilterInterface.
-
 ## Components overview
 
 ### Abstract filter
+
+Abstract filter is a base filter class, which is extended by all standard filters packaged within FiltrationBundle.
+This class provides maximum capabilities FiltrationBundle can offer:
+- Option setting via filter option handler component (implemented FilterOptionInterface)
+- Form handling (implemented FilterHasFormInterface)
+- ... and much more. Learn more about abstract filter [here](filters-reference-abstract-filter.md).
+
+Core abstract methods, which are implemented in every filter, are:
+- **applyFilter** - applying filter on filtration handler
+- **convertValue** - converts raw value (e.g. set by a form) into a "workable" and clean format
+
+If you build your own filter, you can easily extend this class and it will give you maximum capabilities listed above.
+
+However, it is not required to extend AbstractFilter for your own filters, if you don't need all of these capabilities. 
+
+Keep in mind, that:
+- The only essential requirement to build a filter is to have it implemented **FilterInterface**.
+- If you want your filter to be able to have an option setting (array('foo' => 'bar') instead of $filter->setFoo('bar')), the filter must implement **FilterOptionInterface**.
+- If you want your filter to be able to handle form,  the filter must implement **FilterHasFormInterface**.
+
+Learn more about filters [here](filters-reference.md).
 
 ### Filter creator
 

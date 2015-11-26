@@ -16,6 +16,7 @@
     - [Option handler](filters-option-handler.md)
     - [Filter executor](filters-executor.md)
     - [Filter reference](filters-reference.md)
+        - [Abstract filter](filters-reference-abstract-filter.md)
         - [Choice filter](filters-reference-choice-filter.md)
         - [Entity filter](filters-reference-entity-filter.md)
         - [Number filter](filters-reference-number-filter.md)
