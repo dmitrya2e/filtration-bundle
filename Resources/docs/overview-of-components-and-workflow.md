@@ -42,6 +42,12 @@ Learn more about filters [here](filters-reference.md).
 
 ### Filter creator
 
+Filter creator is responsible for creating filters. It is used by filter collection manager in add() method. Example:
+
+```php
+$filter = $serviceContainer->get('da2e.filtration.filter.creator.filter_creator')->create('da2e_orm_text_filter');
+```
+
 ### Filter option handler
 
 ### Filter collection creator
