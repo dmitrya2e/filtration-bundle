@@ -12,9 +12,10 @@
 namespace Da2e\FiltrationBundle\Tests\Manager;
 
 use Da2e\FiltrationBundle\Filter\Collection\Collection;
-use Da2e\FiltrationBundle\Filter\Collection\CollectionManager;
 use Da2e\FiltrationBundle\Filter\Collection\Creator\CollectionCreator;
+use Da2e\FiltrationBundle\Filter\Creator\FilterCreator;
 use Da2e\FiltrationBundle\Filter\Executor\FilterExecutor;
+use Da2e\FiltrationBundle\Filter\Filter\AbstractFilter;
 use Da2e\FiltrationBundle\Form\Creator\FormCreator;
 use Da2e\FiltrationBundle\Manager\FilterSuperManager;
 use Da2e\FiltrationBundle\Tests\TestCase;
@@ -32,7 +33,7 @@ class FilterSuperManagerTest extends TestCase
     {
         $filterSuperManager = new FilterSuperManager(
             $this->getCollectionCreatorMock(),
-            $this->getCollectionManagerMock(),
+            $this->getFilterCreatorMock(),
             $this->getFormCreatorMock(),
             $this->getFilterExecutorMock()
         );
@@ -42,7 +43,7 @@ class FilterSuperManagerTest extends TestCase
     {
         $filterSuperManager = new FilterSuperManager(
             $collectionCreatorMock = $this->getCollectionCreatorMock(['create']),
-            $this->getCollectionManagerMock(),
+            $this->getFilterCreatorMock(),
             $this->getFormCreatorMock(),
             $this->getFilterExecutorMock()
         );
@@ -55,25 +56,27 @@ class FilterSuperManagerTest extends TestCase
     {
         $filterSuperManager = new FilterSuperManager(
             $this->getCollectionCreatorMock(),
-            $collectionManagerMock = $this->getCollectionManagerMock(['add']),
+            $filterCreatorMock = $this->getFilterCreatorMock(['create']),
             $this->getFormCreatorMock(),
             $this->getFilterExecutorMock()
         );
 
-        $collectionMock = $this->getCollectionMock();
+        $collection = new Collection();
+        $filterMock = $this->getFilterMock();
 
-        $collectionManagerMock->expects($this->once())->method('add')
-            ->with('type_alias', 'name', $collectionMock, ['options'])
-            ->willReturn('foobar');
+        $filterCreatorMock->expects($this->once())->method('create')
+            ->with('type_alias', 'name', ['options'])
+            ->willReturn($filterMock);
 
-        $this->assertSame('foobar', $filterSuperManager->addFilter($collectionMock, 'type_alias', 'name', ['options']));
+        $this->assertSame($filterMock, $filterSuperManager->addFilter($collection, 'type_alias', 'name', ['options']));
+        $this->assertEquals($filterMock, $collection->getFilterByName('name'));
     }
 
     public function testCreateForm()
     {
         $filterSuperManager = new FilterSuperManager(
             $this->getCollectionCreatorMock(),
-            $this->getCollectionManagerMock(),
+            $this->getFilterCreatorMock(),
             $formCreatorMock = $this->getFormCreatorMock(['create']),
             $this->getFilterExecutorMock()
         );
@@ -92,7 +95,7 @@ class FilterSuperManagerTest extends TestCase
     {
         $filterSuperManager = new FilterSuperManager(
             $this->getCollectionCreatorMock(),
-            $this->getCollectionManagerMock(),
+            $this->getFilterCreatorMock(),
             $formCreatorMock = $this->getFormCreatorMock(['create', 'handleRequest']),
             $this->getFilterExecutorMock()
         );
@@ -115,7 +118,7 @@ class FilterSuperManagerTest extends TestCase
     {
         $filterSuperManager = new FilterSuperManager(
             $this->getCollectionCreatorMock(),
-            $this->getCollectionManagerMock(),
+            $this->getFilterCreatorMock(),
             $formCreatorMock = $this->getFormCreatorMock(['createNamed']),
             $this->getFilterExecutorMock()
         );
@@ -134,7 +137,7 @@ class FilterSuperManagerTest extends TestCase
     {
         $filterSuperManager = new FilterSuperManager(
             $this->getCollectionCreatorMock(),
-            $this->getCollectionManagerMock(),
+            $this->getFilterCreatorMock(),
             $formCreatorMock = $this->getFormCreatorMock(['createNamed', 'handleRequest']),
             $this->getFilterExecutorMock()
         );
@@ -157,7 +160,7 @@ class FilterSuperManagerTest extends TestCase
     {
         $filterSuperManager = new FilterSuperManager(
             $this->getCollectionCreatorMock(),
-            $this->getCollectionManagerMock(['add']),
+            $this->getFilterCreatorMock(['add']),
             $this->getFormCreatorMock(),
             $filterExecutorMock = $this->getFilterExecutorMock(['execute'])
         );
@@ -185,11 +188,11 @@ class FilterSuperManagerTest extends TestCase
     /**
      * @param array|null|false $methods
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|CollectionManager
+     * @return \PHPUnit_Framework_MockObject_MockObject|FilterCreator
      */
-    private function getCollectionManagerMock($methods = null)
+    private function getFilterCreatorMock($methods = null)
     {
-        return $this->getCustomMock('\Da2e\FiltrationBundle\Filter\Collection\CollectionManager', $methods);
+        return $this->getCustomMock('\Da2e\FiltrationBundle\Filter\Creator\FilterCreator', $methods);
     }
 
     /**
@@ -240,5 +243,13 @@ class FilterSuperManagerTest extends TestCase
     private function getFormInterfaceMock($methods = [])
     {
         return $this->getCustomAbstractMock('\Symfony\Component\Form\FormInterface', $methods);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|AbstractFilter
+     */
+    private function getFilterMock()
+    {
+        return $this->getCustomAbstractMock('\Da2e\FiltrationBundle\Filter\Filter\AbstractFilter', [], ['name']);
     }
 }

@@ -14,6 +14,7 @@ namespace Da2e\FiltrationBundle\Filter\Creator;
 use Da2e\FiltrationBundle\Exception\Filter\Creator\FilterCreatorException;
 use Da2e\FiltrationBundle\Filter\Chain\FilterChainInterface;
 use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
+use Da2e\FiltrationBundle\Filter\FilterOption\FilterOptionHandlerInterface;
 
 /**
  * The default filter creator class.
@@ -29,20 +30,27 @@ class FilterCreator implements FilterCreatorInterface
     protected $filterChain;
 
     /**
-     * @param FilterChainInterface $filterChain
+     * @var FilterOptionHandlerInterface
      */
-    public function __construct(FilterChainInterface $filterChain)
+    protected $filterOptionHandler;
+
+    /**
+     * @param FilterChainInterface         $filterChain
+     * @param FilterOptionHandlerInterface $filterOptionHandler
+     */
+    public function __construct(FilterChainInterface $filterChain, FilterOptionHandlerInterface $filterOptionHandler)
     {
         $this->filterChain = $filterChain;
+        $this->filterOptionHandler = $filterOptionHandler;
     }
 
     /**
      * {@inheritDoc}
      *
      * @return FilterInterface
-     * @throws FilterCreatorException If there is no such filter type alias
+     * @throws FilterCreatorException If there is no such filter type alias or filter does not implement FilterInterface
      */
-    public function create($filterTypeAlias)
+    public function create($filterTypeAlias, $name = null, array $options = [])
     {
         $alias = strtolower($filterTypeAlias);
 
@@ -50,13 +58,26 @@ class FilterCreator implements FilterCreatorInterface
             throw new FilterCreatorException(sprintf('Given filter type alias "%s" does not exist.', $alias));
         }
 
-        /** @var FilterInterface $item */
-        $item = clone $this->filterChain->getType($alias);
 
-        // Set a default unique name (normally, it must be set explicitly).
-        $item->setName($this->generateUniqueName($alias));
+        /** @var FilterInterface $filter */
+        $filter = clone $this->filterChain->getType($alias);
 
-        return $item;
+        if (!($filter instanceof FilterInterface)) {
+            // The filter must implement the bundles FilterInterface.
+            throw new FilterCreatorException(sprintf(
+                'Filter "%s" must implement Da2e\FiltrationBundle\Filter\Filter\FilterInterface interface.',
+                get_class($filter)
+            ));
+        }
+
+        $filter->setName($name === null ? $this->generateUniqueName($alias) : $name);
+
+        if (count($options) > 0) {
+            // Handle filter options if there are such.
+            $this->filterOptionHandler->handle($filter, $options);
+        }
+
+        return $filter;
     }
 
     /**

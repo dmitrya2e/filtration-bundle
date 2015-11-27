@@ -12,8 +12,8 @@
 namespace Da2e\FiltrationBundle\Manager;
 
 use Da2e\FiltrationBundle\Filter\Collection\CollectionInterface;
-use Da2e\FiltrationBundle\Filter\Collection\CollectionManagerInterface;
 use Da2e\FiltrationBundle\Filter\Collection\Creator\CollectionCreatorInterface;
+use Da2e\FiltrationBundle\Filter\Creator\FilterCreatorInterface;
 use Da2e\FiltrationBundle\Filter\Executor\FilterExecutorInterface;
 use Da2e\FiltrationBundle\Filter\Filter\FilterInterface;
 use Da2e\FiltrationBundle\Form\Creator\FormCreatorInterface;
@@ -30,11 +30,11 @@ use Symfony\Component\HttpFoundation\Request;
  * However, it is only the choice of every developer whether to use this manager or not.
  * Check the documentation to find out how to work with the filters without FilterSuperManager.
  *
- * @uses \Da2e\FiltrationBundle\Filter\Collection\Creator\CollectionCreatorInterface::create()
- * @uses \Da2e\FiltrationBundle\Filter\Collection\CollectionManagerInterface::add()
- * @uses \Da2e\FiltrationBundle\Form\Creator\FormCreatorInterface::create()
- * @uses \Da2e\FiltrationBundle\Form\Creator\FormCreatorInterface::createNamed()
- * @uses \Da2e\FiltrationBundle\Filter\Executor\FilterExecutorInterface::execute()
+ * @uses   \Da2e\FiltrationBundle\Filter\Collection\Creator\CollectionCreatorInterface::create()
+ * @uses   \Da2e\FiltrationBundle\Filter\Creator\FilterCreatorInterface::create()
+ * @uses   \Da2e\FiltrationBundle\Form\Creator\FormCreatorInterface::create()
+ * @uses   \Da2e\FiltrationBundle\Form\Creator\FormCreatorInterface::createNamed()
+ * @uses   \Da2e\FiltrationBundle\Filter\Executor\FilterExecutorInterface::execute()
  * @author Dmitry Abrosimov <abrosimovs@gmail.com>
  */
 class FilterSuperManager
@@ -47,11 +47,11 @@ class FilterSuperManager
     protected $collectionCreator;
 
     /**
-     * Used to manage the collection and its filters.
+     * Used to create filters.
      *
-     * @var CollectionManagerInterface
+     * @var FilterCreatorInterface
      */
-    protected $collectionManager;
+    protected $filterCreator;
 
     /**
      * Used to create a filtration form.
@@ -69,18 +69,18 @@ class FilterSuperManager
 
     /**
      * @param CollectionCreatorInterface $collectionCreator
-     * @param CollectionManagerInterface $collectionManager
+     * @param FilterCreatorInterface     $filterCreator
      * @param FormCreatorInterface       $formCreator
      * @param FilterExecutorInterface    $filterExecutor
      */
     public function __construct(
         CollectionCreatorInterface $collectionCreator,
-        CollectionManagerInterface $collectionManager,
+        FilterCreatorInterface $filterCreator,
         FormCreatorInterface $formCreator,
         FilterExecutorInterface $filterExecutor
     ) {
         $this->collectionCreator = $collectionCreator;
-        $this->collectionManager = $collectionManager;
+        $this->filterCreator = $filterCreator;
         $this->formCreator = $formCreator;
         $this->filterExecutor = $filterExecutor;
     }
@@ -106,13 +106,17 @@ class FilterSuperManager
      * @param string              $name       The internal name of the filter
      * @param array               $options    (Optional) The options of the filter
      *
-     * @see \Da2e\FiltrationBundle\Filter\Collection\CollectionManagerInterface::add() for complete documentation
+     * @see \Da2e\FiltrationBundle\Filter\Creator\FilterCreatorInterface::create() for complete documentation
+     * @see \Da2e\FiltrationBundle\Filter\Collection\CollectionInterface::addFilter() for complete documentation
      *
      * @return FilterInterface
      */
     public function addFilter(CollectionInterface $collection, $typeAlias, $name, array $options = [])
     {
-        return $this->collectionManager->add($typeAlias, $name, $collection, $options);
+        $filter = $this->filterCreator->create($typeAlias, $name, $options);
+        $collection->addFilter($filter);
+
+        return $filter;
     }
 
     /**

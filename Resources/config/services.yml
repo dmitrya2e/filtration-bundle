@@ -2,7 +2,6 @@ parameters:
     da2e.filtration.filter.chain.filter_chain_class: Da2e\FiltrationBundle\Filter\Chain\FilterChain
     da2e.filtration.filter.collection.collection_class: Da2e\FiltrationBundle\Filter\Collection\Collection
     da2e.filtration.filter.collection.creator.collection_creator_class: Da2e\FiltrationBundle\Filter\Collection\Creator\CollectionCreator
-    da2e.filtration.filter.collection.collection_manager_class: Da2e\FiltrationBundle\Filter\Collection\CollectionManager
     da2e.filtration.filter.creator.filter_creator_class: Da2e\FiltrationBundle\Filter\Creator\FilterCreator
     da2e.filtration.filter.filter_option.filter_option_handler_class: Da2e\FiltrationBundle\Filter\FilterOption\FilterOptionHandler
     da2e.filtration.filter.executor.filter_executor_class: Da2e\FiltrationBundle\Filter\Executor\FilterExecutor
@@ -28,12 +27,6 @@ services:
         class: %da2e.filtration.filter.collection.creator.collection_creator_class%
         arguments: [ %da2e.filtration.filter.collection.collection_class% ]
 
-    da2e.filtration.filter.collection.collection_manager:
-        class: %da2e.filtration.filter.collection.collection_manager_class%
-        arguments:
-            - @da2e.filtration.filter.creator.filter_creator
-            - @da2e.filtration.filter.filter_option.filter_option_handler
-
     da2e.filtration.filter.executor.filter_executor:
         class: %da2e.filtration.filter.executor.filter_executor_class%
         arguments: [ %da2e.filtration.config.handler_types% ]
@@ -42,7 +35,6 @@ services:
         class: %da2e.filtration.manager.filter_super_manager_class%
         arguments:
             - @da2e.filtration.filter.collection.creator.collection_creator
-            - @da2e.filtration.filter.collection.collection_manager
             - @da2e.filtration.form.creator.form_creator
             - @da2e.filtration.filter.executor.filter_executor
 

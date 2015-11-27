@@ -24,8 +24,10 @@ interface FilterCreatorInterface
      * Creates a filter with default parameters.
      *
      * @param string $filterTypeAlias The defined filter service alias
+     * @param string $name            The name of the filter
+     * @param array  $options         (Optional) The filter options
      *
      * @return mixed|FilterInterface
      */
-    public function create($filterTypeAlias);
+    public function create($filterTypeAlias, $name = null, array $options = []);
 }

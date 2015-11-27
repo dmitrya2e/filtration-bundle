@@ -32,24 +32,19 @@ public function yourAction(Request $request)
     $queryBuilder->where('foo.bar = :bar')->setParameter('bar', 'bar2');
     $queryBuilder->andWhere('foo.baz = :baz')->setParameter('baz', 'baz2');
 
-    // 1. Create a filter collection.
-    $collection = $this->get('da2e.filtration.filter.collection.creator.collection_creator')->create();
-
-    // 2. Get filter collection manager and add filters to the collection.
-    $collectionManager = $this->get('da2e.filtration.filter.collection.collection_manager');
+    // 1. Get filter creator and create filters.
+    $filterCreator = $this->get('da2e.filtration.filter.creator.filter_creator');
 
     // - 1st argument is filter alias from the service definition.
     // - 2nd argument is the name of the filter.
-    // - 3rd argument is the filter collection itself.
-    // - 4th argument contains filter options (optional argument).
-    $collectionManager->add('da2e_orm_text_filter', 'name', $collection, [
-        'field_name' => 'foo.name',
-    ]);
+    // - 3rd argument contains filter options (optional argument).
+    $filter1 = $filterCreator->create('da2e_orm_text_filter', 'name', ['field_name' => 'foo.name']);
+    $filter2 = $filterCreator->create('da2e_orm_number_filter', 'price', ['field_name' => 'foo.price', 'float' => true]);
 
-    $collectionManager->add('da2e_orm_number_filter', 'price', $collection, [
-        'field_name' => 'foo.price',
-        'float'      => true,
-    ]);
+    // 2. Create a filter collection and add the filters.
+    $collection = $this->get('da2e.filtration.filter.collection.creator.collection_creator')->create();
+    $collection->addFilter($filter1);
+    $collection->addFilter($filter2);
 
     // 3. Get form creator and create a form (this example creates a named form).
     // - 1st argument is the name of the root form.
