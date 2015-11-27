@@ -12,7 +12,6 @@
     - [Filtration handlers](filters-handlers.md)
     - [Filter collection](filters-collection.md)
     - [Filter collection creator](filters-collection-creator.md)
-    - [Filter collection manager](filters-collection-manager.md)
     - [Option handler](filters-option-handler.md)
     - [Filter executor](filters-executor.md)
     - [Filter reference](filters-reference.md)
