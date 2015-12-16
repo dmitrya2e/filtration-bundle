@@ -47,6 +47,8 @@ The bundle itself is not packaged with any filtration adapter, so you must inclu
 
 You can always [create custom filtration adapter](example-add-custom-filtration-handler.md) or even [create an open-source filtration adapter bundle](example-create-filtration-handler-bundle.md), which might be found useful by other developers.
 
+[Click here](filters-handlers.md) to find more about filtration handlers.
+
 ### Step 5: Prepare the environment
 
 Finally, return to the command console and clear the cache:
