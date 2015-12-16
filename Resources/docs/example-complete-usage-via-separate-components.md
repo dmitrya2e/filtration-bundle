@@ -5,14 +5,7 @@
 - This example creates 2 filters (name and price)
 - Template engine in this example is Twig
 - Filtration form is created and passed to the template
-- This example uses Doctrine ORM query builder as filtration handler, so you must enable it in bundle configuration:
-```yaml
-# app/config/config.yml
-
-da2e_filtration:
-    handlers:
-        doctrine_orm: true
-```
+- This example uses Doctrine ORM query builder as filtration handler, so you must have it also installed as a [bundle](https://github.com/dmitrya2e/filtration-doctrine-orm-bundle).
 
 ### Controller
 
@@ -38,8 +31,8 @@ public function yourAction(Request $request)
     // - 1st argument is filter alias from the service definition.
     // - 2nd argument is the name of the filter.
     // - 3rd argument contains filter options (optional argument).
-    $filter1 = $filterCreator->create('da2e_orm_text_filter', 'name', ['field_name' => 'foo.name']);
-    $filter2 = $filterCreator->create('da2e_orm_number_filter', 'price', ['field_name' => 'foo.price', 'float' => true]);
+    $filter1 = $filterCreator->create('da2e_doctrine_orm_text_filter', 'name', ['field_name' => 'foo.name']);
+    $filter2 = $filterCreator->create('da2e_doctrine_orm_number_filter', 'price', ['field_name' => 'foo.price', 'float' => true]);
 
     // 2. Create a filter collection and add the filters.
     $collection = $this->get('da2e.filtration.filter.collection.creator.collection_creator')->create();

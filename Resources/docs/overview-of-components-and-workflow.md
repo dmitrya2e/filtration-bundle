@@ -46,7 +46,7 @@ Filter creator is responsible for creating filters. Example:
 
 ```php
 $creator = $serviceContainer->get('da2e.filtration.filter.creator.filter_creator');
-$filter = $creator->create('da2e_orm_text_filter', 'filter_name', ['filter', 'options']);
+$filter = $creator->create('da2e_doctrine_orm_text_filter', 'filter_name', ['filter', 'options']);
 ```
 
 ### Filter option handler
