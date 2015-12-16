@@ -14,7 +14,7 @@ The bundle includes following features:
 - Possibility to add custom filters and custom filtration handlers
 - Possibility to customize standard bundle filters
 - The bundle is packaged with a various standard filters (choice, entity, number, date, text)
-- The bundle supports various standard filter adapters (Doctrine ORM, Sphinx API)
+- Various filter adapters (Doctrine ORM, Sphinx API, ...)
 
 Plans:
 
@@ -25,7 +25,12 @@ Plans:
 
 The first version of the bundle was developed within [AXIOMA web-studio](https://www.axiomadev.com/), the company where I work.
 
-## Software requirements:
+## Filtration handler adapters
+
+- [Doctrine ORM](https://github.com/dmitrya2e/filtration-doctrine-orm-bundle)
+- [Sphinx Client](https://github.com/dmitrya2e/filtration-sphinx-client-bundle)
+
+## Software requirements
 
 - PHP 5.4++
 - Symfony 2.3++ (the bundle is tested with Symfony **2.3** and **2.7** versions)
