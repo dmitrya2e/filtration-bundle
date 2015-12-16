@@ -32,7 +32,7 @@ class FiltrationCompilePass implements CompilerPassInterface
         }
 
         $definition = $container->getDefinition('da2e.filtration.filter.chain.filter_chain');
-        $taggedServices = $container->findTaggedServiceIds('da2e.filtration.manager.filter');
+        $taggedServices = $container->findTaggedServiceIds('da2e.filtration.filter');
 
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {

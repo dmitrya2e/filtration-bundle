@@ -75,9 +75,7 @@ class FilterExecutor implements FilterExecutorInterface
      * Registers specific filtration handler.
      *
      * @param object|mixed $handler Any supported resource, which can handle filtration (QueryBuilder, ...)
-     * @param string|bool  $type    The type of the handler (custom or FilterHandlerModel::HANDLER_*)
-     *
-     * @see \Da2e\FiltrationBundle\Model\FilterHandlerModel constants for available default handler types
+     * @param string|bool  $type    The type of the handler
      *
      * @return static
      * @throws FilterExecutorException on handler errors

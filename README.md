@@ -11,19 +11,18 @@ The bundle includes following features:
 
 - Built-in integration with Symfony forms to render filters in views
 - Auto-execution of applied filters regarding specific filtration handler (e.g. Doctrine ORM)
-- Possibility to add custom filters and custom filtration handlers
+- Possibility to add custom filters and custom filter adapters
 - Possibility to customize standard bundle filters
-- The bundle is packaged with a various standard filters (choice, entity, number, date, text)
-- Various filter adapters (Doctrine ORM, Sphinx API, ...)
+- Various standard filters (choice, entity, number, date, text) and filter adapters (Doctrine ORM, Sphinx Client, ...)
 
 Plans:
 
-- Add more standard filters (boolean, time, datetime, ...) and more standard filter adapters (Doctrine ODM, SphinxQL, plain SQL queries, ...)
+- Add more standard filters (boolean, time, datetime, ...) and more filter adapters (Doctrine ODM, SphinxQL, plain SQL queries, ...)
 - Implement validation of filter values
 - Implement sorting component
 - ...
 
-The first version of the bundle was developed within [AXIOMA web-studio](https://www.axiomadev.com/), the company where I work.
+The first version of the bundle was developed within [AXIOMA web-studio](https://www.axiomadev.com/) - the company where I work.
 
 ## Filtration handler adapters
 

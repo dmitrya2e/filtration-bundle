@@ -5,14 +5,7 @@
 - This example creates 2 filters (name and price)
 - Template engine in this example is Twig
 - Filtration form is created and passed to the template
-- This example uses Doctrine ORM query builder as filtration handler, so you must enable it in bundle configuration:
-```yaml
-# app/config/config.yml
-
-da2e_filtration:
-    handlers:
-        doctrine_orm: true
-```
+- This example uses Doctrine ORM query builder as filtration handler, so you must have it also installed as a [bundle](https://github.com/dmitrya2e/filtration-doctrine-orm-bundle)
 
 ### Controller
 

@@ -37,26 +37,10 @@ class ConfigurationTest extends TestCase
         $children = $tree->getChildren();
         $this->assertTrue(is_array($children));
         $this->assertArrayHasKey('handlers', $children);
-        $this->assertArrayHasKey('custom_handlers', $children);
-        $this->assertCount(2, $children);
+        $this->assertCount(1, $children);
 
         // Handlers
-        $handlers = $children['handlers'];
-        $this->assertInstanceOf('\Symfony\Component\Config\Definition\ArrayNode', $handlers);
-        $this->assertTrue($handlers->hasDefaultValue());
-        $handlersChildren = $handlers->getChildren();
-        $this->assertTrue(is_array($handlersChildren));
-        $this->assertArrayHasKey('doctrine_orm', $handlersChildren);
-        $this->assertArrayHasKey('sphinx_api', $handlersChildren);
-        $this->assertCount(2, $handlersChildren);
-
-        $this->assertInstanceOf('\Symfony\Component\Config\Definition\ScalarNode', $handlersChildren['doctrine_orm']);
-        $this->assertInstanceOf('\Symfony\Component\Config\Definition\ScalarNode', $handlersChildren['sphinx_api']);
-        $this->assertFalse($handlersChildren['doctrine_orm']->getDefaultValue());
-        $this->assertFalse($handlersChildren['sphinx_api']->getDefaultValue());
-
-        // Custom handlers
-        $customHandlers = $children['custom_handlers'];
+        $customHandlers = $children['handlers'];
         $this->assertInstanceOf('\Symfony\Component\Config\Definition\PrototypedArrayNode', $customHandlers);
 
         $prototype = $customHandlers->getPrototype();

@@ -71,7 +71,7 @@ class FiltrationCompilerPassTest extends TestCase
             ->willReturn($definitionMock);
 
         $containerMock->expects($this->once())->method('findTaggedServiceIds')
-            ->with('da2e.filtration.manager.filter')
+            ->with('da2e.filtration.filter')
             ->willReturn([
                 'foo' => [['alias' => 'foo1']],
                 'baz' => [['alias' => 'baz1']],

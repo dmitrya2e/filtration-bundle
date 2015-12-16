@@ -11,7 +11,6 @@
 
 namespace Da2e\FiltrationBundle\DependencyInjection;
 
-use Da2e\FiltrationBundle\Model\FilterHandlerModel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -37,25 +36,13 @@ class Da2eFiltrationExtension extends Extension
         $loader->load('services.yml');
 
         // Default handler types.
-        $handlerTypes = FilterHandlerModel::getDefaultHandlerTypes();
-
-        foreach ($config['handlers'] as $type => $isEnabled) {
-            if ($isEnabled === true) {
-                // Load enabled handler type filter definitions.
-                $loader->load(sprintf('filters_%s.yml', $type));
-            } else {
-                // Disable handler type.
-                if (array_key_exists($type, $handlerTypes)) {
-                    unset($handlerTypes[$type]);
-                }
-            }
-        }
+        $handlerTypes = [];
 
         // Merge default and custom handlers.
-        if (count($config['custom_handlers']) > 0) {
+        if (count($config['handlers']) > 0) {
             $customHandlerTypes = [];
 
-            foreach ($config['custom_handlers'] as $handler) {
+            foreach ($config['handlers'] as $handler) {
                 $customHandlerTypes[$handler['name']] = $handler['class_name'];
             }
 
