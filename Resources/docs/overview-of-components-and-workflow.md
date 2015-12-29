@@ -67,15 +67,15 @@ An example:
 ```php
 $optionHandler = $serviceContainer->get('da2e.filtration.filter.filter_option.filter_option_handler.');
 
-$filter = new TextFilter('foo_filter');
+$filter = new SomeFilter('foo_filter'); // or create via filter creator component
 $optionHandler->handle($filter, ['bar' => 123, 'baz' => 321]);
 ```
 
 If you use filter creator component, than there is no need for you to use filter option handler separately, because filter creator does work in conjunction with option handler.
 
-Note, that option handler can handle options only for the filter (in this case, TextFilter) implemented **FilterOptionInterface**. Otherwise an exception will be thrown.
+Note, that option handler can handle options only for the filter (in this case, SomeFilter) being implemented **FilterOptionInterface**, otherwise an exception will be thrown.
 
-**FilterOptionInterface** describes only one method - **getValidOptions()**. This method must return an array, which describes available options. The options basically are an array which maps option name to a setter method with few other parameters.
+**FilterOptionInterface** describes only one method - **getValidOptions()**. This method must return an array, which describes available options. The options basically are an array which maps option names to a setter methods with few other parameters.
 
 An example of available options in **getValidOptions()** method:
 
@@ -111,9 +111,124 @@ Consider the following:
 
 ### Filter collection creator
 
+Filter collection creator is responsible for creating a filter collection. Basically, it is a factory with one simple factory method.
+
+```php
+$collectionCreator = $serviceContainer->get('da2e.filtration.filter.collection.creator.collection_creator');
+
+// Simple as it is!
+$collection = $collectionCreator->create();
+```
+
 ### Filter collection
 
+Filter collection is a collection class, which allows to add/remove/get filters. It is required by filter executor and form creator components.
+
+You can simply create it like this:
+
+```php
+$collection = new \Da2e\FiltrationBundle\Filter\Collection\Collection();
+```
+
+But **it is recommended to use filter collection creator** component (see above section).
+
 ### Filter executor
+
+Filter executor is one of the key components which handles the filtration itself - it executes applied filters. "Execution" can be interpreted differently, and it depend on a specific filtration handler. For example, if filtration handler is Doctrine ORM, by "execution" is meant setting **andWhere()** methods for applied filters on the query builder object.
+
+An example:
+
+```php
+// Create filter collection
+$collectionCreator = $serviceContainer->get('da2e.filtration.filter.collection.creator.collection_creator');
+$collection = $collectionCreator->create();
+
+// Create demo filters
+$creator = $serviceContainer->get('da2e.filtration.filter.creator.filter_creator');
+$titleFilter = $creator->create('da2e_doctrine_orm_text_filter', 'news_title', ['field_name' => 'news.title']);
+$contentFilter = $creator->create('da2e_doctrine_orm_text_filter', 'news_content', ['field_name' => 'news.content']);
+
+// Add filters to the collection
+$collection->addFilter($titleFilter);
+$collection->addFilter($contentFilter);
+
+// Value will be probably set by form in real world
+$titleFilter->setValue('applied value');
+
+// The query builder
+$queryBuilder = $repository->createQueryBuilder('news');
+
+// Execute applied filters
+$executor = $serviceContainer->get('da2e.filtration.filter.executor.filter_executor');
+
+// Filter executor must take filter collection as 1st argument and array of filtration handlers as 2nd argument
+$executor->execute($collection, [$queryBuilder]);
+```
+
+In the example above only $titleFilter will be executed and $contentFilter will be ignored, because value was "applied" only for $titleFilter.
+
+The second argument of the **execute()** method must contain an array of filtration handlers. Most of the time it will probably contain only one handler, but if it is required to have more handlers, it is possible to pass multiple elements. It is also possible to pass handlers in 2 ways (you can choose any preferred):
+
+```php
+// Multiple filtration handlers.
+$executor->execute($collection, [$queryBuilder, $sphinxClient]);
+
+// Passing filtration handler without explicitly specifying its type.
+// In this case filter executor will try to guess handler type by its object.
+// If filter executor will fail at guessing filtration handler type, an exception will be thrown.
+$executor->execute($collection, [$queryBuilder]);
+
+// Passing filtration handler with explicit specifying its type.
+// In this case filter executor will not try to guess filtration type, because it was explicitly set.
+$executor->execute($collection, ['doctrine_orm' => $queryBuilder]);
+```
+
+Note, that filtration types must be properly enabled:
+- if you use custom filtration handler, just enable it in FiltrationBundle configuration:
+```yaml
+# app/config/config.yml
+
+da2e_filtration:
+    handlers:
+        # for example, "Redis" is your custom filtration handler
+        redis:
+            name: redis
+            class: \Your\Path\To\Redis\Filtration\Handler
+```
+- if you use some of the existing filtration adapter bundles (e.g. Da2e FiltrationDoctrineORMBundle), just be sure to enable the bundle in AppKernel file:
+```php
+// app/AppKernel.php
+
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        // ...
+        $bundles = [
+            // ...
+            new \Da2e\FiltrationDoctrineORMBundle\Da2eFiltrationDoctrineORMBundle(),
+        ];
+        
+        // ...
+        
+        return $bundles;
+    }
+    
+    // ...
+}
+```
+
+If you need to redefine filtration handler of the existing filtration adapter bundle, you can do it in the same way as defining your own custom handlers:
+```yaml
+# app/config/config.yml
+
+da2e_filtration:
+    handlers:
+        # for example, your need a custom Doctrine ORM handler
+        doctrine_orm:
+            name: doctrine_orm # it is important to the existing name of filtration adapter to override it
+            class: \Your\Path\To\Doctrine\ORM\Custom\Handler
+```
 
 ### Form creator
 
