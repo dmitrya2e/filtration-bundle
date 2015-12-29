@@ -6,14 +6,10 @@
 
 ## Bundle usage
 
-- [Brief overview of all components and workflow](overview-of-components-and-workflow.md)
+- [Overview of components and workflow](overview-of-components-and-workflow.md)
 - [Filters](filters.md)
     - [Overview](filters-overview.md)
     - [Filter adapters (filtration handlers)](filters-handlers.md)
-    - [Filter collection](filters-collection.md)
-    - [Filter collection creator](filters-collection-creator.md)
-    - [Option handler](filters-option-handler.md)
-    - [Filter executor](filters-executor.md)
     - [Filter reference](filters-reference.md)
         - [Abstract filter](filters-reference-abstract-filter.md)
         - [Choice filter](filters-reference-choice-filter.md)
@@ -21,16 +17,8 @@
         - [Number filter](filters-reference-number-filter.md)
         - [Date filter](filters-reference-date-filter.md)
         - [Text filter](filters-reference-text-filter.md)
-- [Filtration form](form.md)
-    - [Form creator](form-creator.md)
-    - [Filter form type](form-filter-type.md)
 - [Filter super manager](manager-filter-super-manager.md)
 - [Callable function validators](callable-validators.md)
-    - [Overview](callable-validators-overview.md)
-    - ["Apply filters" validator](callable-validators-apply-filters-validator.md)
-    - ["Has applied value" validator](callable-validators-has-applied-value-validator.md)
-    - ["Convert value" validator](callable-validators-convert-value-validator.md)
-    - ["Append form fields" validator](callable-validators-append-form-fields-validator.md)
 - [Exceptions](exceptions.md)
 - [Translations](translations.md)
 
