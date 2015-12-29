@@ -1,4 +1,4 @@
-# Brief overview of all components and workflow
+# Overview of components and workflow
 
 ## Introduction
 
@@ -231,6 +231,26 @@ da2e_filtration:
 ```
 
 ### Form creator
+
+Form creator is a wrapper of Symfony FormFactory component and is responsible for creating a filtration form based on a filter collection:
+
+```php
+// $collection = ...; 
+
+$formCreator = $serviceContainer->get('da2e.filtration.form.creator.form_creator');
+$form = $formCreator->createNamed('filters', $collection);
+
+// Call $form->createView() to pass the form to the template.
+```
+
+Form creator offers two methods for creating forms - **create()** and **createNamed()**, which differ only that the first [creates unnamed form](http://api.symfony.com/2.7/Symfony/Component/Form/FormFactory.html#method_create), while the second [creates named form](http://api.symfony.com/2.7/Symfony/Component/Form/FormFactory.html#method_createNamed).
+
+The form will contain child filters in the same order they are defined in the filter collection. Also, the filter must implement **FilterHasFormInterface** to be included in the filtration form.
+
+It is possible to pass 2 additional array-arguments to both of create/createNamed methods:
+
+- 1st contains an array of options for the root form builder (fully compatible with FormFactory::create() and FormFactory::createNamed() methods)
+- 2nd contains an array of options for the filter form builder (**the same set of options are applied to every filter**; fully compatible with FormFactory::create() and FormFactory::createNamed() methods)
 
 ## Filtration form
 
