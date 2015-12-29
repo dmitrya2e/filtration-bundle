@@ -19,7 +19,8 @@ You can replace any of them with your own implementations or you can use only co
 
 ### Abstract filter
 
-Abstract filter is a base filter class, which is extended by all standard filters packaged within FiltrationBundle.
+Abstract filter is a base filter class, which may extended by filters.
+
 This class provides maximum capabilities FiltrationBundle can offer:
 - Option setting via filter option handler component (implemented FilterOptionInterface)
 - Form handling (implemented FilterHasFormInterface)
@@ -31,7 +32,7 @@ Core abstract methods, which are implemented in every filter, are:
 
 If you build your own filter, you can easily extend this class and it will give you maximum capabilities listed above.
 
-However, it is not required to extend AbstractFilter for your own filters, if you don't need all of these capabilities. 
+However, it is not required to extend AbstractFilter for your own filters, if you don't need all of these functions. 
 
 Keep in mind, that:
 - The only essential requirement to build a filter is to have it implemented **FilterInterface**.
@@ -42,14 +43,71 @@ Learn more about filters [here](filters-reference.md).
 
 ### Filter creator
 
-Filter creator is responsible for creating filters. Example:
+Filter creator is responsible for creating filters. An example:
 
 ```php
 $creator = $serviceContainer->get('da2e.filtration.filter.creator.filter_creator');
-$filter = $creator->create('da2e_doctrine_orm_text_filter', 'filter_name', ['filter', 'options']);
+
+// 1st argument is the alias of filter service definition.
+// 2nd argument is the name of the filter. If it is omitted, a random unique name will be generated.
+// 3rd argument is an array of filter options.
+$filter = $creator->create('da2e_doctrine_orm_text_filter', 'filter_name', ['filter' => 'options']);
 ```
 
+Filter creator is used in conjunction with filter option handler, if options are passed while creating a filter. To use this feature, the filter must implement **FilterOptionInterface**.
+
 ### Filter option handler
+
+Default filters provide a variety of setters for configuring its behaviour and properties. Sometimes, it is more convenient to have some sort of single option bag instead of different setter methods, for example if the options are generated dynamically by multiple conditions, or if you just prefer more shorter way of setting options.
+
+Filter option handler exists exactly for this purpose: basically, it handles an array of options for filter and transforms them into setters, which are executed as usual.
+
+An example: 
+
+```php
+$optionHandler = $serviceContainer->get('da2e.filtration.filter.filter_option.filter_option_handler.');
+
+$filter = new TextFilter('foo_filter');
+$optionHandler->handle($filter, ['bar' => 123, 'baz' => 321]);
+```
+
+If you use filter creator component, than there is no need for you to use filter option handler separately, because filter creator does work in conjunction with option handler.
+
+Note, that option handler can handle options only for the filter (in this case, TextFilter) implemented **FilterOptionInterface**. Otherwise an exception will be thrown.
+
+**FilterOptionInterface** describes only one method - **getValidOptions()**. This method must return an array, which describes available options. The options basically are an array which maps option name to a setter method with few other parameters.
+
+An example of available options in **getValidOptions()** method:
+
+```php
+public static function getValidOptions()
+{
+    return [
+        'foo' => [
+            'setter' => 'setFoo',
+            'type'   => 'string',
+            'empty'  => false,
+        ],
+        'bar' => [
+            'setter' => 'setBar',
+            'type'   => ['int', 'float'],
+            'empty'  => true,
+        ],
+        'baz' => [
+            'setter'      => 'setBaz',
+            'type'        => 'object',
+            'instance_of' => '\stdClass',
+        ],
+    ];
+}
+```
+
+Consider the following:
+- tye 'type' key is not required and in this case the type of the value will not be checked
+- the 'type' key can contain just one type (as string), or multiple types as array of strings
+- the type must be a string, which can be joined with 'is_' prefix to form a PHP function (e.g. 'is_string')
+- the 'empty' key is not required and if it is not set, it is considered, that the option may be empty
+- if the type is "object", the 'instance_of' key may be set with class FQN as value
 
 ### Filter collection creator
 
