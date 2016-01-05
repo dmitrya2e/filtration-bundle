@@ -1,5 +1,7 @@
 # Overview of components and workflow
 
+[Return to the documentation index page](index.md)
+
 ## Introduction
 
 Whole workflow of the filtration bundle consist of several components:

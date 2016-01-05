@@ -1,5 +1,7 @@
 # Usage example via FilterSuperManager
 
+[Return to the documentation index page](index.md)
+
 ## Prerequisites of the example
 
 - This example creates 2 filters (name and price)

@@ -1,5 +1,7 @@
 # Configuration reference
 
+[Return to the documentation index page](index.md)
+
 ```yaml
 # app/config/config.yml
 

@@ -1,5 +1,7 @@
 # How to install
 
+[Return to the documentation index page](index.md)
+
 ### Step 1: Download the bundle
 
 You can install the bundle via [Composer](https://getcomposer.org/). Open a command console, navigate to the project directory and type the following command:
