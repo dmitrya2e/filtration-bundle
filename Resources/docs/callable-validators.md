@@ -4,9 +4,9 @@
 
 ## Overview
 
-As it is mentioned in [filters overview section](filters-overview.md) filters might have a custom implementations for some default methods. For example, AbstractFilter has ability to pass custom handlers for methods **applyFilter()**, **appendFormFields()** and others.
+As it is mentioned in [filters overview section](filters-overview.md), filters might have a custom implementations for some default methods. For example, AbstractFilter has ability to pass custom handlers for methods **applyFilter()**, **appendFormFields()** and others.
 
-"Custom implementations" are based on callable functions. If you care about the correctness of callable function input signature, which I care about, you can validate these callable functions with a CallableFunction validators.
+"Custom implementations" are based on callable functions. If you care about the correctness of callable function input signature, which I care about, you can validate them with a CallableFunction validators.
 
 For example, to pass a custom implementation of **applyFilter()** method, you must do the following:
 
@@ -38,7 +38,7 @@ public function setApplyFilterFunction(callable $function)
 ```
 
 1. It gets a callable function validator for "apply filter" method.
-2. It checks it the passed callable function is valid.
+2. It checks if the passed callable function is valid.
 3. If the callable function is invalid, an exception will be thrown. Otherwise the passed callable function is set as new "apply filter" method.
 
 To pass a custom callable function validator for applyFilter() method, you can use the option **callable_validator_apply_filter**:
@@ -81,7 +81,7 @@ Each argument type is an array, which can contain the following keys:
     - if it is **null**, than no type check will be done, however the argument will be checked for the presence
     - if it equals to a fully-qualified name of a class, the argument will be checked to be an instance of this class
     - if it is **null** and additionally the key "array" with value **true** will be passed, than the argument will be checked to be an array
-- **array** - must be passed in conjunction with key **type**=**null**. It makes sense to pass only **true** for this key, because it will be checked that the argument is an array. Combination of **type**=**null** and **array**=**false** will act the same, as simple **type**=**null**.
+- **array** - must be passed in conjunction with key **type**=**null**. It makes sense to pass only **true** for this key, because it will be checked that the argument is an array. Combination of **type**=**null** and **array**=**false** will act the same, as simply **type**=**null**.
 
 ## Default callable function validators
 
