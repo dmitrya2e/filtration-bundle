@@ -7,18 +7,16 @@
 ## Bundle usage
 
 - [Overview of components and workflow](overview-of-components-and-workflow.md)
-- [Filters](filters.md)
+- Filters
     - [Overview](filters-overview.md)
     - [Filter adapters (filtration handlers)](filters-handlers.md)
-    - [Filter reference](filters-reference.md)
-        - [Abstract filter](filters-reference-abstract-filter.md)
-            - [Choice filter](filters-reference-choice-filter.md)
-            - [Entity filter](filters-reference-entity-filter.md)
-            - [Text filter](filters-reference-text-filter.md)
-            - [Range or single filter](filters-reference-range-or-single-filter.md)
-                - [Number filter](filters-reference-number-filter.md)
-                - [Date filter](filters-reference-date-filter.md)
     - [Callable function validators](callable-validators.md)
+    - Filter reference
+        - [Choice filter](filters-reference-choice-filter.md)
+        - [Entity filter](filters-reference-entity-filter.md)
+        - [Text filter](filters-reference-text-filter.md)
+        - [Number filter](filters-reference-number-filter.md)
+        - [Date filter](filters-reference-date-filter.md)
 - [Exceptions](exceptions.md)
 - [Translations](translations.md)
 

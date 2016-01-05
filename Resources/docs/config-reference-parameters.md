@@ -1,4 +1,4 @@
-# Configuration reference
+# Configuration reference via parameters
 
 ```yaml
 # app/config/parameters.yml
