@@ -14,9 +14,9 @@ The only requirement for a filter class to be considered as a valid filter, is t
 
 Note that FilterInterface does not have any method regarding a value of the filter. You must decide on your own how to handle the value, e.g. create setValue() method, .... 
 
-## Common abstract filter
+[Check here](example-create-custom-filter.md) how to create your own filter using only FilterInterface.
 
-[TODO]: describe common abstract filter.
+## Common abstract filter
 
 Implementing FilterInterface is the minimal requirement needed for a filter to work. However, often we need more possibilities. 
 
@@ -26,15 +26,40 @@ FiltrationBundle is packaged with abstract **\Da2e\FiltrationBundle\Filter\Filte
 - creating a filter representation in a form;
 - convenient overriding of default crucial methods, e.g. applying filter, creating form field, converting value, etc;
 - default behaviour in some of the crucial methods, e.g. converting value;
-- ability to override default callable function validators.
+- ability to override default callable function validators. 
 
-**Each filter in any open-source filtration adapter bundle must extend AbstractFilter class.** 
+It is recommended to use AbstractFilter for your own custom filters, however you are free to decide whether to use it or not.
 
-Also, it is recommended to use AbstractFilter even for your own custom filters, however you are free to decide whether to use it or not.
+[Check here](example-create-custom-filter.md) how to create your own filter using AbstractFilter.
 
 ## Specific abstract filters
 
-[TODO]: describe specific abstract filters.
+However, if we go further, we need even more possibilities, but this time filter-specific. For example, a number filter may have options for handling int/float numbers, or a date/number filter might have options for defining how exactly handle range filter (==, >= or <=).
+
+Not to duplicate the same code in every concrete filter, there is a set of specific abstract filters, which include implementation of some of crucial methods such as **appendFormFieldsToForm()** and **convertValue()**:
+
+- AbstractChoiceFilter
+- AbstractEntityFilter
+- AbstractDateFilter
+- AbstractNumberFilter
+- AbstractTextFilter
+
+Each of them is placed under the namespace \Da2e\FiltrationBundle\Filter\Filter.
+
+So if you will use these classes, than in a concrete filter class most of the time you will need only to implement **applyFilter()** method with filter execution code.
+
+**Each filter in open-source filtration adapter bundle must extend appropriate specific abstract filter classes.** E.g. if you are to create open-source filtration adapter bundle (lets say for Redis filtration handler), you must:
+
+- extend \Da2e\FiltrationBundle\Filter\Filter\AbstractTextFilter by text filter;
+- extend \Da2e\FiltrationBundle\Filter\Filter\AbstractChoiceFilter by choice filter;
+- extend \Da2e\FiltrationBundle\Filter\Filter\AbstractDateFilter by date filter;
+- extend \Da2e\FiltrationBundle\Filter\Filter\AbstractNumberFilter by number filter;
+- extend \Da2e\FiltrationBundle\Filter\Filter\AbstractEntityFilter by entity filter;
+- ...
+
+[TODO]: describe AbstractRangeOrSingleFilter!
+
+[Check here](example-create-custom-filter.md) how to create your own filter using specific abstract filters.
 
 ### Abstract filter options
 
