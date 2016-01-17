@@ -1,7 +1,7 @@
 # How to install
 
 [Return to the documentation index page](index.md)
-[Return to the index page](/)
+[Return to the index page](../)
 
 ### Step 1: Download the bundle
 
