@@ -5,20 +5,20 @@
 ## Filter interface
 
 The only requirement for a filter class to be considered as a valid filter, is to implement **\Da2e\FiltrationBundle\Filter\Filter\FilterInterface**, which has only 5 methods:
- 
+
 - **setName($name)** - sets the internal name of the filter;
 - **getName()** - gets the internal name of the filter;
 - **setFieldName($name)** - sets the field name (e.g. in a query builder) of the filter;
 - **getType()** - gets the type of the filter (e.g. "doctrine_orm"); required to determine the filtration handler;
 - **applyFilter** - applies the filtration.
 
-Note that FilterInterface does not have any method regarding a value of the filter. You must decide on your own how to handle the value, e.g. create setValue() method, .... 
+Note that FilterInterface does not have any method regarding a value of the filter. You must decide on your own how to handle the value, e.g. create setValue() method, ....
 
 [Check here](example-create-custom-filter.md) how to create your own filter using only FilterInterface.
 
 ## Common abstract filter
 
-Implementing FilterInterface is the minimal requirement needed for a filter to work. However, often we need more possibilities. 
+Implementing FilterInterface is the minimal requirement needed for a filter to work. However, often we need more possibilities.
 
 FiltrationBundle is packaged with abstract **\Da2e\FiltrationBundle\Filter\Filter\AbstractFilter** class, which has maximum capabilities the bundle can offer:
 
@@ -26,7 +26,7 @@ FiltrationBundle is packaged with abstract **\Da2e\FiltrationBundle\Filter\Filte
 - creating a filter representation in a form;
 - convenient overriding of default crucial methods, e.g. applying filter, creating form field, converting value, etc;
 - default behaviour in some of the crucial methods, e.g. converting value;
-- ability to override default callable function validators. 
+- ability to override default callable function validators.
 
 It is recommended to use AbstractFilter for your own custom filters, however you are free to decide whether to use it or not.
 
@@ -99,7 +99,7 @@ public function applyFilter($handler)
     if (!$this->hasAppliedValue()) {
         return;
     }
-    
+
     $handler
         ->andWhere(sprintf('%s = :%s', $this->getFieldName(), $this->getName()))
         ->setParameter($this->getName(), $this->getConvertedValue());
@@ -123,7 +123,7 @@ The real value of this type must se set in a concrete filter class. It must the 
 
 #### Convert value
 
-Abstract method **convertValue()** converts raw value to an appropriate form to work with. 
+Abstract method **convertValue()** converts raw value to an appropriate form to work with.
 For example, your filter must use only a number (e.g. int type) and somehow (through a form or any other way) the value set via setValue() method is a numeric string, which is not ok, because you need an integer.
 
 You must handle these situations via convertValue() method:
@@ -143,15 +143,15 @@ protected function convertValue()
     if (!is_array($this->value)) {
         return [];
     }
-    
+
     $convertedValue = [];
-    
+
     foreach ($this->value as $v) {
         if (strpos($v, 'foo') !== false) {
             $convertedValue[] = $v;
         }
     }
-    
+
     return $convertedValue;
 }
 ```
@@ -197,7 +197,7 @@ Method **appendFormFieldsToForm()** takes one parameter (\Symfony\Component\Form
 public function appendFormFieldsToForm(FormBuilderInterface $formBuilder)
 {
     $formBuilder->add($this->getValuePropertyName(), $this->getFormFieldType(), $this->getFormOptions());
-    
+
     return $formBuilder;
 }
 ```

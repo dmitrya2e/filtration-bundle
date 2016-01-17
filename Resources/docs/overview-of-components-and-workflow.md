@@ -2,6 +2,12 @@
 
 [Return to the documentation index page](index.md)
 
+## FiltrationBundle and filtration handler adapter bundles
+
+FiltrationBundle itself provide only a convenient base for further filtration handling. **It is not packaged with a final implementations of filters**, instead it offers a set of standard filter abstractions, which may be used for building a final implementation of filters for a specific handler/provider (Doctrine ORM/ODM, Sphinx, ...).
+
+However, there are available ready-to-use implementations of filtration handlers. You can find them on [the index page](../../../).
+
 ## Introduction
 
 Whole workflow of the filtration bundle consist of several components:
@@ -21,7 +27,7 @@ You can replace any of them with your own implementations or you can use only co
 
 ### Abstract filter
 
-Abstract filter is a base filter class, which may extended by filters.
+Abstract filter is a base filter class, which may be extended by filters.
 
 This class provides maximum capabilities FiltrationBundle can offer:
 - Option setting via filter option handler component (implemented FilterOptionInterface)
@@ -34,7 +40,7 @@ Core abstract methods, which are implemented in every filter, are:
 
 If you build your own filter, you can easily extend this class and it will give you maximum capabilities listed above.
 
-However, it is not required to extend AbstractFilter for your own filters, if you don't need all of these functions. 
+However, it is not required to extend AbstractFilter for your own filters, if you don't need all of these functions.
 
 Keep in mind, that:
 - The only essential requirement to build a filter is to have it implemented **FilterInterface**.
@@ -64,7 +70,7 @@ Default filters provide a variety of setters for configuring its behaviour and p
 
 Filter option handler exists exactly for this purpose: basically, it handles an array of options for filter and transforms them into setters, which are executed as usual.
 
-An example: 
+An example:
 
 ```php
 $optionHandler = $serviceContainer->get('da2e.filtration.filter.filter_option.filter_option_handler.');
@@ -210,12 +216,12 @@ class AppKernel extends Kernel
             // ...
             new \Da2e\FiltrationDoctrineORMBundle\Da2eFiltrationDoctrineORMBundle(),
         ];
-        
+
         // ...
-        
+
         return $bundles;
     }
-    
+
     // ...
 }
 ```
@@ -237,7 +243,7 @@ da2e_filtration:
 Form creator is a wrapper of Symfony FormFactory component and is responsible for creating a filtration form based on a filter collection:
 
 ```php
-// $collection = ...; 
+// $collection = ...;
 
 $formCreator = $serviceContainer->get('da2e.filtration.form.creator.form_creator');
 $form = $formCreator->createNamed('filters', $collection);
@@ -268,7 +274,7 @@ The form can be created via form creator component and passed to the template as
 
 To create a form field for each filter, it is required to have a prototype of form type object.
 
-The bundle is packaged with a default one filter form type - **FilterType**, which is used for every filter. 
+The bundle is packaged with a default one filter form type - **FilterType**, which is used for every filter.
 It is just an instance of Symfony FormTypeInterface with minimal configuration in it.
 
 If for some reason you need your own form type object, you can easily override it in configuration.
@@ -297,7 +303,7 @@ Check out the examples of usage through different ways:
 
 ## Components customization
 
-Each of the components is fully customizable, which means you can override any of them just by redefining a specific parameters in parameters file (app/parameters.yml) or by configuring them in bundle configuration (app/config.yml). 
+Each of the components is fully customizable, which means you can override any of them just by redefining a specific parameters in parameters file (app/parameters.yml) or by configuring them in bundle configuration (app/config.yml).
 
 For example, to override filter collection component, you can just redefine the following parameter:
 ```yaml
