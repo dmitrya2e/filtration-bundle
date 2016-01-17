@@ -6,7 +6,7 @@
 
 FiltrationBundle itself provide only a convenient base for further filtration handling. **It is not packaged with a final implementations of filters**, instead it offers a set of standard filter abstractions, which may be used for building a final implementation of filters for a specific handler/provider (Doctrine ORM/ODM, Sphinx, ...).
 
-However, there are available ready-to-use implementations of filtration handlers. You can find them on [the index page](../../../).
+However, there are available ready-to-use implementations of filtration handlers. You can find them on the index page.
 
 ## Introduction
 
