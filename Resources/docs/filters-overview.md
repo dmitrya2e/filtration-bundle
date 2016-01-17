@@ -57,7 +57,22 @@ So if you will use these classes, than in a concrete filter class most of the ti
 - extend \Da2e\FiltrationBundle\Filter\Filter\AbstractEntityFilter by entity filter;
 - ...
 
+## AbstractRangeOrSingleFilter
+
 There is also a class **AbstractRangeOrSingleFilter**, which is extended by **AbstractNumberFilter** and **AbstractDateFilter**. Both of them can handle filtration in ranged (min/max boundings) or single (exact matching) mode. To not duplicate a code for these kind of filters, AbstractRangeOrSingleFilter was created to share a common code.
+
+It has 2 crucial abstract methods for implementation:
+
+- **convertSingleValue**: a method for raw value conversion in single mode. Must return a single scalar value;
+- **convertRangedValue**: a method for raw value conversion in ranged mode. Must return an array with 2 elements (0 and 1 indexes): min/max values (may be null for both).
+
+It also implements **convertValue** method from AbstractFilter class.
+
+For getting converted value in a single mode, you can use standard method **getConvertedValue** from AbstractFilter.
+For getting converted value in a ranged mode, use:
+
+- **getConvertedFromValue**: for getting "from" field value;
+- **getConvertedToValue**: for getting "to" field value.
 
 [Check here](example-create-custom-filter.md) how to create your own filter using specific abstract filters.
 
@@ -85,6 +100,35 @@ AbstractFilter offers a set of default options while creating it using filter cr
 | callable_validator_convert_value      | The internal name of the filter (also used as a form name).                                           | object   | false   | No           | *CallableFunctionValidatorInterface |
 
 * Fully-qualified name is **\Da2e\FiltrationBundle\CallableFunction\Validator\CallableFunctionValidatorInterface**.
+
+### AbstractRangeOrSingleFilter options
+
+AbstractRangeOrSingleFilter fully extends options from AbstractFilter, but also offers a set of own options.
+
+| Option name                 | Description                                                                                           | Type   | Default                      | Can be empty |
+| --------------------------- | ----------------------------------------------------------------------------------------------------- | ------ | ---------------------------- | ------------ |
+| from_postfix                | Applicable for ranged mode only. The postfix of the "from" field name. E.g. filter name is "foo" and from-postfix is "_from", then the "from" field name is "foo_from". This name is used in form. | string | _from                        | No           |
+| to_postfix                  | Applicable for ranged mode only. The postfix of the "to" field name. E.g. filter name is "foo" and to-postfix is "_to", then the "to" field name is "foo_to". This name is used in form.           | string | _to                          | No           |
+| single                      | Defines whether to handle filter in single mode or ranged.                                                           | bool   | false                        | No           |
+| single_type                 | Applicable for single mode only. Defines single mode type (exact, greater, less, ...).                                                      | string | single_exact                 | No           |
+| ranged_from_type            | Applicable for ranged mode only. Defines ranged mode type for "from" field (greater/greater or equal).                                                               | string | ranged_from_greater_or_equal | No           |
+| ranged_to_type              | Applicable for ranged mode only. Defines ranged mode type for "to" field (less/less or equal).                                             | string | ranged_to_less_or_equal      | No           |
+| from_value_property_name    | Applicable for ranged mode only. The name of the class property containing value for "from" field.                                              | string | fromValue                    | No           |
+| to_value_property_name      | Applicable for ranged mode only. The name of the class property containing value for "to" field. | string | toValue                      | No           |
+| form_field_type_ranged_from | Applicable for ranged mode only. The alias of the form type for "from" field ([form types](http://symfony.com/doc/current/reference/forms/types.html)).                                                       | string |                              | No           |
+| form_field_type_ranged_to   | Applicable for ranged mode only. The alias of the form type for "to" field ([form types](http://symfony.com/doc/current/reference/forms/types.html)).                                                 | string |                              | No           |
+
+AbstractRangeOrSingleFilter also offers a constants that are recommended to use:
+
+- **SINGLE_TYPE_EXACT**: "exact" (==) type of filtration in single mode.
+- **SINGLE_TYPE_GREATER**: "greater" (>) type of filtration in single mode.
+- **SINGLE_TYPE_GREATER_OR_EQUAL**: "greater or equal" (>=) type of filtration in single mode.
+- **SINGLE_TYPE_LESS**: "less" (<) type of filtration in single mode.
+- **SINGLE_TYPE_LESS_OR_EQUAL**: "less or equal" (<=) type of filtration in single mode.
+- **RANGED_FROM_TYPE_GREATER**: "greater" (>) type of filtration in ranged mode for "from" field.
+- **RANGED_FROM_TYPE_GREATER_OR_EQUAL**: "greater or equal" (>=) type of filtration in ranged mode for "from" field.
+- **RANGED_TO_TYPE_LESS**: "less" (<) type of filtration in ranged mode for "to" field.
+- **RANGED_TO_TYPE_LESS_OR_EQUAL**: "less or equal" (<=) type of filtration in ranged mode for "to" field.
 
 ### Crucial functions
 
