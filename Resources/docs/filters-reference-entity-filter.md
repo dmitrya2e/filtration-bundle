@@ -26,7 +26,7 @@ All of these values can be overrided via filter option **form_options** or sette
 
 ## Value conversion
 
-The choice filter implements **convertValue** method and it has the following logic:
+The entity filter implements **convertValue** method and it has the following logic:
 
 - if the raw value is an instance of Doctrine Collection object, then it is iterated and for every value is being checked that it has method **getId** and if yes, the value of this method will be stored in a converted array; the converted array with IDs will be returned;
 - if the raw value is not an instance of Doctrine Collection object, but it still is an object and it has method **getId**, then the value of this method will be placed in an array; the converted array with single value will be returned.
