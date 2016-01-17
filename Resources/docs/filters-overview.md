@@ -57,7 +57,7 @@ So if you will use these classes, than in a concrete filter class most of the ti
 - extend \Da2e\FiltrationBundle\Filter\Filter\AbstractEntityFilter by entity filter;
 - ...
 
-[TODO]: describe AbstractRangeOrSingleFilter!
+There is also a class **AbstractRangeOrSingleFilter**, which is extended by **AbstractNumberFilter** and **AbstractDateFilter**. Both of them can handle filtration in ranged (min/max boundings) or single (exact matching) mode. To not duplicate a code for these kind of filters, AbstractRangeOrSingleFilter was created to share a common code.
 
 [Check here](example-create-custom-filter.md) how to create your own filter using specific abstract filters.
 
