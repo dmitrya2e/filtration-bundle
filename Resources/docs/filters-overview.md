@@ -57,6 +57,8 @@ So if you will use these classes, than in a concrete filter class most of the ti
 - extend \Da2e\FiltrationBundle\Filter\Filter\AbstractEntityFilter by entity filter;
 - ...
 
+[Check here](example-create-custom-filter.md) how to create your own filter using specific abstract filters.
+
 ## AbstractRangeOrSingleFilter
 
 There is also a class **AbstractRangeOrSingleFilter**, which is extended by **AbstractNumberFilter** and **AbstractDateFilter**. Both of them can handle filtration in ranged (min/max boundings) or single (exact matching) mode. To not duplicate a code for these kind of filters, AbstractRangeOrSingleFilter was created to share a common code.
@@ -73,8 +75,6 @@ For getting converted value in a ranged mode, use:
 
 - **getConvertedFromValue**: for getting "from" field value;
 - **getConvertedToValue**: for getting "to" field value.
-
-[Check here](example-create-custom-filter.md) how to create your own filter using specific abstract filters.
 
 ### Abstract filter options
 
@@ -130,7 +130,7 @@ AbstractRangeOrSingleFilter also offers a constants that are recommended to use:
 - **RANGED_TO_TYPE_LESS**: "less" (<) type of filtration in ranged mode for "to" field.
 - **RANGED_TO_TYPE_LESS_OR_EQUAL**: "less or equal" (<=) type of filtration in ranged mode for "to" field.
 
-### Crucial functions
+### Crucial functions of AbstractFilter
 
 #### Apply filter
 
