@@ -12,7 +12,7 @@ The choice filter options are fully extended from **AbstractFilter**.
 
 ## Form handling
 
-The choice filter is represented by a **choice** form type.
+The choice filter is represented by a **choice** form type, which can be overrided via option **form_field_type** or setter method **setFormFieldType**.
 
 The choice filter is appended to a form by form builder object with the following options:
 
